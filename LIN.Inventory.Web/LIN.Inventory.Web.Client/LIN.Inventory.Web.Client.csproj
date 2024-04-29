@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
+    <StaticWebAssetProjectMode>Default</StaticWebAssetProjectMode>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="Pages\Error.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Pages\Error.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\SILF\SILF\SILF.Script\SILF.Script.csproj" />
+    <ProjectReference Include="..\..\..\..\AccesoAPI\LIN.Access.Auth\LIN.Access.Auth.csproj" />
+    <ProjectReference Include="..\..\..\..\AccesoAPI\LIN.Access.Inventory\LIN.Access.Inventory.csproj" />
+    <ProjectReference Include="..\..\..\..\AccesoAPI\LIN.Access.Search\LIN.Access.Search.csproj" />
+    <ProjectReference Include="..\..\..\..\Components\LIN.Emma.UI\LIN.Emma.UI\LIN.Emma.UI.csproj" />
+    <ProjectReference Include="..\..\..\..\Components\LIN.Inventory.Shared\LIN.Inventory.Shared.csproj" />
+    <ProjectReference Include="..\..\..\..\Tipos\LIN.Types.Cloud.Identity\LIN.Types.Cloud.Identity.csproj" />
+    <ProjectReference Include="..\..\..\..\Tipos\LIN.Types.Contacts\LIN.Types.Contacts.csproj" />
+    <ProjectReference Include="..\..\..\..\Tipos\LIN.Types.Emma\LIN.Types.Emma.csproj" />
+    <ProjectReference Include="..\..\..\..\Tipos\LIN.Types.Exp.Search\LIN.Types.Exp.Search.csproj" />
+    <ProjectReference Include="..\..\..\..\Tipos\LIN.Types.Inventory\LIN.Types.Inventory.csproj" />
+    <ProjectReference Include="..\..\..\..\Tipos\LIN.Types\LIN.Types.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Pages\Home.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+  </ItemGroup>
+
+</Project>

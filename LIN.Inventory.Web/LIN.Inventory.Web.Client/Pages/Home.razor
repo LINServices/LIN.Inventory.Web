@@ -1,0 +1,99 @@
+﻿@page "/home"
+@inject NavigationManager nav
+@rendermode InteractiveWebAssembly
+
+
+@* Pantalla *@
+<div class="UIScroll flex w-full justify-center overflow-y-auto overflow-x-hidden">
+    <div class="mx-5 flex h-full w-full max-w-lg flex-grow flex-col">
+
+
+        <label class="mt-8 text-4xl font-bold dark:text-zinc-200">Tablero</label>
+
+        <div class="mt-8 flex w-full flex-col gap-3 lg:flex-row">
+
+            @if (HomeDTO != null)
+            {
+
+                <div class="w-full rounded-lg bg-white p-4 shadow dark:bg-zinc-900">
+                    <div class="flex justify-between">
+                        <div>
+                            <h5 class="mt-2 pb-1 text-3xl font-bold leading-none text-gray-900 dark:text-white">@FormatearNumero((HomeDTO?.Model?.TodaySalesTotal) ?? 0)</h5>
+                            <p class="text-base font-normal text-gray-500 dark:text-gray-400">Ventas hoy</p>
+                        </div>
+                        @{
+                            var total = Calcular();
+                        }
+                        <div class="flex items-center px-2.5 py-0.5 text-center text-base font-semibold @(total.StartsWith('-') ? "text-red-500 dark:text-red-500":"text-green-500 dark:text-green-500")">
+
+                            @total%
+
+                            <svg class="ms-1 h-3 w-3 @(total.StartsWith('-') ? "rotate-180":"")" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13V1m0 0L1 5m4-4 4 4" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-full rounded-lg bg-white p-4 shadow dark:bg-zinc-900">
+                    <div class="flex justify-between">
+                        <div>
+                            <h5 class="mt-2 pb-1 text-3xl font-bold leading-none text-gray-900 dark:text-white">@FormatearNumero(HomeDTO?.Model?.LastWeekSalesTotal ?? 0)</h5>
+                            <p class="text-base font-normal text-gray-500 dark:text-gray-400">Ventas semana pasada</p>
+                        </div>
+
+                    </div>
+                </div>
+            }
+
+        </div>
+
+        <div class="mb-2 mt-3 w-full">
+
+            <Chart @ref="Chart" HomeDto="HomeDTO?.Model" />
+
+        </div>
+
+
+        <div class="mb-2 mt-3 flex w-full flex-col py-1">
+
+            <label class="text-xl font-bold dark:text-zinc-100">Notificaciones</label>
+
+            @if (Notifications.Response == Responses.IsLoading)
+            {
+                <LIN.Emma.UI.CircleLoader />
+            }
+            else if (Notifications.Response == Responses.Success)
+            {
+
+                if (Notifications.Models.Count <= 0)
+                {
+                    <div class="border-2 mt-3 flex w-full items-center justify-center rounded-lg border-dashed border-gray-300 py-10 dark:border-zinc-600">
+                        <label class="text-gray-400 dark:text-zinc-400">No tienes ninguna invitación</label>
+                    </div>
+                }
+                else
+                {
+                    @foreach (var e in Notifications.Models)
+                    {
+                        <LIN.Components.Shared.InvitationControl Model="e" Models="Notifications.Models" OnRemove="OnRemove" />
+                    }
+                }
+            }
+            else
+            {
+                <div class="border-2 mt-3 flex w-full items-center justify-center rounded-lg border-dashed border-gray-300 py-10 dark:border-zinc-600">
+                    <label class="text-gray-400 dark:text-zinc-400">Hubo un error al obtener</label>
+                </div>
+            }
+
+        </div>
+
+
+
+
+    </div>
+
+</div>
+
+<EmmaDrawer @ref="EmmaIA"></EmmaDrawer>
