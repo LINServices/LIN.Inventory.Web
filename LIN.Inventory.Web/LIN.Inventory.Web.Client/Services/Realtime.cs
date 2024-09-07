@@ -32,9 +32,7 @@ internal class Realtime
     /// </summary>
     public static void Start()
     {
-
         Shared.Realtime.Start();
-
     }
 
 
@@ -148,13 +146,7 @@ internal class Realtime
             }
 
             Products.Selected = find;
-
             Product.Show();
-
-
-
-
-
         })
         // Propiedades
         {

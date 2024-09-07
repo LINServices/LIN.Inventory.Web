@@ -1,3 +1,6 @@
+using LIN.Inventory.Shared;
+using LIN.Inventory.Shared.Interfaces;
+using LIN.Inventory.Web.Client.Services;
 using LIN.Inventory.Web.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,6 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
+
+builder.Services.AddSingleton<IDeviceSelector, DeviceSelector>();
 
 var app = builder.Build();
 
