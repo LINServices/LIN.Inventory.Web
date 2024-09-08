@@ -25,6 +25,7 @@ LIN.Access.Auth.Build.Init();
 LIN.Access.Inventory.Build.Init();
 LIN.Access.Search.Build.Init();
 
+Realtime.DeviceName = "Web";
 Realtime.Build();
 
 await builder.Build().RunAsync();
