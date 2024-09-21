@@ -1,6 +1,5 @@
-﻿
-
-using LIN.Inventory.Web.Client.Layout;
+﻿using LIN.Inventory.Realtime.Manager;
+using LIN.Inventory.Web.Client.Services;
 
 namespace LIN.Inventory.Web.Client.Pages;
 
@@ -179,6 +178,8 @@ public partial class Login
     private async void Start()
     {
 
+        StartServices();        
+
         // Validar si es con llave.
         if (IsWithKey)
         {
@@ -241,6 +242,14 @@ public partial class Login
 
     }
 
+
+    void StartServices()
+    {
+        if (deviceManager is DeviceManager db)
+        {
+            db.Actions = Scripts.Build();
+        }
+    }
 
 
     /// <summary>

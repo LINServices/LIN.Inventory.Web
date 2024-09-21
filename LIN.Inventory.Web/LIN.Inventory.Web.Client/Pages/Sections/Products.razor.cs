@@ -69,7 +69,7 @@ public partial class Products : IProduct, IDisposable
 
         ProductObserver.Add(Contexto?.Inventory.ID ?? 0, this);
 
-        _ = deviceManager.JoinInventory(int.Parse(Id));
+        deviceManager.JoinInventory(int.Parse(Id));
 
         // Base.
         base.OnParametersSet();

@@ -7,7 +7,7 @@ using SILF.Script.Interfaces;
 namespace LIN.Inventory.Web.Client.Services;
 
 
-internal class Scripts
+public class Scripts
 {
 
     /// <summary>

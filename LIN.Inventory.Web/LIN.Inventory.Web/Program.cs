@@ -2,6 +2,7 @@ using LIN.Inventory.Shared;
 using LIN.Inventory.Shared.Interfaces;
 using LIN.Inventory.Web.Client.Services;
 using LIN.Inventory.Web.Components;
+using LIN.Inventory.Realtime.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,9 +11,10 @@ builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
 
 builder.Services.AddSingleton<IDeviceSelector, DeviceSelector>();
+builder.Services.AddRealTime();
 
 var app = builder.Build();
-
+app.Services.UseRealTime("Web", Scripts.Build());
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

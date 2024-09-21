@@ -20,6 +20,7 @@ using LIN.Inventory.Realtime.Extensions;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
+//
 builder.Services.AddSingleton<IDeviceSelector, DeviceSelector>();
 builder.Services.AddAuthenticationService();
 builder.Services.AddRealTime();
@@ -27,6 +28,6 @@ LIN.Access.Inventory.Build.Init();
 LIN.Access.Search.Build.Init();
 
 var app = builder.Build();
-app.Services.UseRealTime("Web", Scripts.Build());
+app.Services.UseRealTime("Web client", Scripts.Build());
 
 await builder.Build().RunAsync();
