@@ -12,20 +12,21 @@ global using LIN.Types.Inventory.Models;
 global using LIN.Types.Inventory.Transient;
 global using LIN.Types.Responses;
 global using Microsoft.AspNetCore.Components;
+using LIN.Access.Auth;
 using LIN.Inventory.Shared.Interfaces;
 using LIN.Inventory.Web.Client.Services;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using LIN.Inventory.Realtime.Extensions;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
-
 builder.Services.AddSingleton<IDeviceSelector, DeviceSelector>();
-
-LIN.Access.Auth.Build.Init();
+builder.Services.AddAuthenticationService();
+builder.Services.AddRealTime();
 LIN.Access.Inventory.Build.Init();
 LIN.Access.Search.Build.Init();
 
-Realtime.DeviceName = "Web";
-Realtime.Build();
+var app = builder.Build();
+app.Services.UseRealTime("Web", Scripts.Build());
 
 await builder.Build().RunAsync();

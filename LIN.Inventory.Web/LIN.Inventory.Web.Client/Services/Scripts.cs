@@ -1,8 +1,4 @@
-﻿using LIN.Access.Inventory.Hubs;
-using LIN.Inventory.Shared.Services;
-using LIN.Inventory.Shared.Services.Observers;
-using LIN.Inventory.Shared.Services.Runtime;
-using LIN.Inventory.Web.Client.Layout;
+﻿using LIN.Inventory.Shared.Services.Runtime;
 using LIN.Inventory.Web.Client.Pages;
 using LIN.Inventory.Web.Client.Pages.Sections;
 using LIN.Inventory.Web.Client.Pages.Sections.Viewer;
@@ -11,36 +7,13 @@ using SILF.Script.Interfaces;
 namespace LIN.Inventory.Web.Client.Services;
 
 
-internal class Realtime
+internal class Scripts
 {
-
-
-
-    /// <summary>
-    /// Id del dispositivo.
-    /// </summary>
-    public static string DeviceName { get => Shared.Realtime.DeviceName; set => Shared.Realtime.DeviceName = value; }
-    public static string DeviceKey { get => Shared.Realtime.DeviceKey; }
-
-
-    public static InventoryAccessHub InventoryAccessHub { get => Shared.Realtime.InventoryAccessHub; }
-
-
-
-    /// <summary>
-    /// Iniciar el servicio.
-    /// </summary>
-    public static void Start()
-    {
-        Shared.Realtime.Start();
-    }
-
-
 
     /// <summary>
     /// Construye las funciones.
     /// </summary>
-    public static void Build()
+    public static List<IFunction> Build()
     {
 
 
@@ -493,18 +466,7 @@ internal class Realtime
 
 
         // Guardar métodos.
-        Shared.Realtime.Build([updateContacts, viewContact, viewProduct, addProduct, addInflow, addOutflow, newInvitation, newStateInvitation, viewInflow, viewOutflow, updateProduct]);
+        return [updateContacts, viewContact, viewProduct, addProduct, addInflow, addOutflow, newInvitation, newStateInvitation, viewInflow, viewOutflow, updateProduct];
     }
-
-
-
-    /// <summary>
-    /// Cerrar conexión.
-    /// </summary>
-    public static void Close()
-    {
-        Shared.Realtime.Close();
-    }
-
 
 }

@@ -1,5 +1,4 @@
 ﻿using LIN.Inventory.Shared.Services.Models;
-using LIN.Inventory.Shared.Services.Observers;
 
 namespace LIN.Inventory.Web.Client.Pages.Sections;
 
@@ -70,7 +69,7 @@ public partial class Products : IProduct, IDisposable
 
         ProductObserver.Add(Contexto?.Inventory.ID ?? 0, this);
 
-        _ = Services.Realtime.InventoryAccessHub?.JoinInventory(int.Parse(Id));
+        _ = deviceManager.JoinInventory(int.Parse(Id));
 
         // Base.
         base.OnParametersSet();

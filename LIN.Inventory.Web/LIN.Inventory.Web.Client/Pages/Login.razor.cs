@@ -211,7 +211,7 @@ public partial class Login
             case Responses.Success:
 
                 // Iniciar servicios de tiempo real.
-                Services.Realtime.Start();
+                deviceManager.StartSession(Session!.Token);
 
                 // Navegar.
                 NavigationManager?.NavigateTo("/home");
@@ -348,7 +348,9 @@ public partial class Login
         await Task.Delay(4000);
 
         // Esperar la respuesta de login.
-        var (_, response) = await logIn;
+        var (session, response) = await logIn;
+
+        deviceManager.StartSession(session!.Token);
 
         // Segun la respuesta.
         switch (response)

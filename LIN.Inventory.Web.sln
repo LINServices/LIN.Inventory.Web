@@ -31,6 +31,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LIN.Types.Exp.Search", "..\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LIN.Inventory.Shared", "..\..\Components\LIN.Inventory.Shared\LIN.Inventory.Shared.csproj", "{A5B561BE-D75F-4B67-9F66-FF566C531AFA}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LIN.Inventory.Realtime", "..\..\Components\LIN.Inventory.Realtime\LIN.Inventory.Realtime.csproj", "{8C42CD11-AA9E-42A2-A9F9-A5FF65668FFC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,10 @@ Global
 		{A5B561BE-D75F-4B67-9F66-FF566C531AFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5B561BE-D75F-4B67-9F66-FF566C531AFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5B561BE-D75F-4B67-9F66-FF566C531AFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C42CD11-AA9E-42A2-A9F9-A5FF65668FFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C42CD11-AA9E-42A2-A9F9-A5FF65668FFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C42CD11-AA9E-42A2-A9F9-A5FF65668FFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C42CD11-AA9E-42A2-A9F9-A5FF65668FFC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

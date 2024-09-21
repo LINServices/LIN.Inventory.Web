@@ -97,9 +97,6 @@ public partial class NewInventory
             StateHasChanged();
         }
 
-        _ = Notification(response.LastID);
-
-
         var x = await Inventories.Read(response.LastID, Session.Instance.Token);
 
 
@@ -131,18 +128,6 @@ public partial class NewInventory
 
 
 
-    /// <summary>
-    /// Notificar a los nuevos integrantes.
-    /// </summary>
-    /// <param name="id">Id.</param>
-    private static async Task Notification(int id)
-    {
-        // Si es null.
-        if (Realtime.InventoryAccessHub == null)
-            return;
-
-        await Realtime.InventoryAccessHub.Notification(id);
-    }
 
 
 }
