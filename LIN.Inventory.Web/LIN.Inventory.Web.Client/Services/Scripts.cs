@@ -6,7 +6,6 @@ using SILF.Script.Interfaces;
 
 namespace LIN.Inventory.Web.Client.Services;
 
-
 public class Scripts
 {
 

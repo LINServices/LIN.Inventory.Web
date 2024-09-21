@@ -28,6 +28,6 @@ LIN.Access.Inventory.Build.Init();
 LIN.Access.Search.Build.Init();
 
 var app = builder.Build();
-app.Services.UseRealTime("Web client", Scripts.Build());
+app.Services.UseRealTime("Web client", "WEB", Scripts.Build());
 
 await builder.Build().RunAsync();

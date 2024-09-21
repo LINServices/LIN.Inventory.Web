@@ -3,7 +3,6 @@ using LIN.Inventory.Web.Client.Services;
 
 namespace LIN.Inventory.Web.Client.Pages;
 
-
 public partial class Login
 {
 

@@ -2,10 +2,8 @@
 
 namespace LIN.Inventory.Web.Client.Services;
 
-
 internal class File : IOpenFiles
 {
-
 
     /// <summary>
     /// Carga la imagen de perfil
@@ -16,18 +14,12 @@ internal class File : IOpenFiles
     }
 
 
-
-
     /// <summary>
     /// Carga la imagen de perfil
     /// </summary>
     public static async Task<byte[]> Open()
     {
-
-   
         return [];
-
     }
-
 
 }
