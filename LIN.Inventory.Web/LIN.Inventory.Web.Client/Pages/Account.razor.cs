@@ -1,9 +1,4 @@
-﻿
-
-using LIN.Inventory.Web.Client.Layout;
-using LIN.Inventory.Web.Client.Services;
-
-namespace LIN.Inventory.Web.Client.Pages;
+﻿namespace LIN.Inventory.Web.Client.Pages;
 
 
 public partial class Account
@@ -20,7 +15,7 @@ public partial class Account
         Session.CloseSession();
 
         // Limpiar error.
-        InventoryContext.Dictionary.Clear();
+        InventoryManager.Clear();
 
         // Limpiar.
         Inventory.Clean();

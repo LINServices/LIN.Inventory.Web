@@ -2,7 +2,7 @@
 
 namespace LIN.Inventory.Web.Client.Services;
 
-internal class File : IOpenFiles
+public class File : IOpenFiles
 {
 
     /// <summary>

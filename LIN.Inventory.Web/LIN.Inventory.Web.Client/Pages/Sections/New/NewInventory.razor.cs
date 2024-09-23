@@ -1,6 +1,4 @@
 ﻿using LIN.Access.Inventory.Controllers;
-using LIN.Inventory.Shared.Drawers;
-using LIN.Inventory.Web.Client.Services;
 
 namespace LIN.Inventory.Web.Client.Pages.Sections.New;
 
@@ -105,7 +103,7 @@ public partial class NewInventory
 
         if (x.Response == Responses.Success)
         {
-            Inventory.AddData(x.Model);
+            Inventory.instance.AddData(x.Model);
 
 
         }

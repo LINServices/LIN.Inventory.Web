@@ -1,5 +1,6 @@
 ﻿@page "/outflows/{Id}"
-
+@inject IInventoryManager InventoryManager
+@inject IOutflowObserver OutflowObserver
 @inject NavigationManager nav
 
 <AuthorizedControl />

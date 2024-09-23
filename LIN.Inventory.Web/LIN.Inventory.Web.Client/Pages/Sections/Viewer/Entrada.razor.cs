@@ -1,4 +1,6 @@
-﻿using LIN.Inventory.Web.Client.Layout;
+﻿using LIN.Inventory.Realtime.Manager.Models;
+using LIN.Inventory.Realtime.Manager;
+using LIN.Inventory.Web.Client.Layout;
 
 namespace LIN.Inventory.Web.Client.Pages.Sections.Viewer;
 
@@ -29,11 +31,7 @@ public partial class Entrada
     protected override async Task OnParametersSetAsync()
     {
 
-
-        // Obtener el Contexto.
-        var inventoryContext = (from context in InventoryContext.Dictionary
-                                where (context.Value.Inflows ?? new()).Models.Any(t => t.ID == int.Parse(Id))
-                                select context.Value).FirstOrDefault();
+        InventoryContext? inventoryContext = InventoryManager.FindContextByInflow(int.Parse(Id));
 
         // Validar.
         if (inventoryContext == null)

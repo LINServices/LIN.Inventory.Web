@@ -1,10 +1,7 @@
-﻿using LIN.Inventory.Shared.Drawers;
-using LIN.Inventory.Shared.Services.Observers;
-
-namespace LIN.Inventory.Web.Client.Pages;
+﻿namespace LIN.Inventory.Web.Client.Pages;
 
 
-public partial class Home : IDisposable, INotificationObserver
+public partial class Home : IDisposable, INotificationModelObserver
 {
 
 

@@ -1,8 +1,8 @@
-﻿using LIN.Inventory.Shared.Services.Models;
+﻿using LIN.Inventory.Realtime.Manager.Models;
 
 namespace LIN.Inventory.Web.Client.Pages.Sections;
 
-public partial class Products : IProduct, IDisposable
+public partial class Products : IInventoryModelObserver, IDisposable
 {
 
 
@@ -31,7 +31,7 @@ public partial class Products : IProduct, IDisposable
     /// <summary>
     /// Contexto del inventario.
     /// </summary>
-    InventoryContextModel? Contexto { get; set; }
+    InventoryContext? Contexto { get; set; }
 
 
 
@@ -49,7 +49,7 @@ public partial class Products : IProduct, IDisposable
     {
 
         // Obtener el contexto.
-        Contexto = InventoryContext.Get(int.Parse(Id));
+        Contexto = InventoryManager.Get(int.Parse(Id));
 
         // Evaluar el contexto.
         if (Contexto != null)
@@ -67,7 +67,7 @@ public partial class Products : IProduct, IDisposable
         if (Response == null)
             GetData();
 
-        ProductObserver.Add(Contexto?.Inventory.ID ?? 0, this);
+        InventoryObserver.Add(Contexto?.Inventory.ID ?? 0, this);
 
         deviceManager.JoinInventory(int.Parse(Id));
 
@@ -125,7 +125,7 @@ public partial class Products : IProduct, IDisposable
     /// </summary>
     public void Dispose()
     {
-        ProductObserver.Remove(this);
+        InventoryObserver.Remove(this);
     }
 
 

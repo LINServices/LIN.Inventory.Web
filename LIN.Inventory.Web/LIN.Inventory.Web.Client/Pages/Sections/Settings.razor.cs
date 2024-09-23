@@ -1,6 +1,5 @@
 ﻿using LIN.Access.Inventory.Controllers;
-using LIN.Inventory.Shared.Drawers;
-using LIN.Inventory.Shared.Services.Models;
+using LIN.Inventory.Realtime.Manager.Models;
 
 namespace LIN.Inventory.Web.Client.Pages.Sections;
 
@@ -61,7 +60,7 @@ public partial class Settings
     /// <summary>
     /// Contexto de inventario.
     /// </summary>
-    InventoryContextModel? InventoryContext { get; set; }
+    InventoryContext? InventoryContext { get; set; }
 
 
     /// <summary>
@@ -88,7 +87,7 @@ public partial class Settings
     public async void Reload()
     {
 
-        InventoryContext = Shared.Services.InventoryContext.Get(int.Parse(Id));
+        InventoryContext =InventoryManager.Get(int.Parse(Id));
 
 
         if (InventoryContext == null)

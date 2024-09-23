@@ -1,6 +1,4 @@
-﻿using LIN.Inventory.Shared.Drawers;
-using LIN.Inventory.Shared.Services.Models;
-using static System.Collections.Specialized.BitVector32;
+﻿using LIN.Inventory.Realtime.Manager.Models;
 
 namespace LIN.Inventory.Web.Client.Pages.Sections.New;
 
@@ -61,7 +59,7 @@ public partial class NewOutflow
     /// <summary>
     /// Contexto del inventario.
     /// </summary>
-    private InventoryContextModel? Contexto { get; set; }
+    private InventoryContext? Contexto { get; set; }
 
 
 
@@ -72,7 +70,7 @@ public partial class NewOutflow
     {
 
         // Obtener el contexto.
-        Contexto = InventoryContext.Get(int.Parse(Id));
+        Contexto = InventoryManager.Get(int.Parse(Id));
 
         // Base.
         base.OnParametersSet();

@@ -1,3 +1,4 @@
+using Global.Http;
 using LIN.Inventory.Realtime.Extensions;
 using LIN.Inventory.Shared.Interfaces;
 using LIN.Inventory.Web.Client.Services;
@@ -10,10 +11,12 @@ builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
 
 builder.Services.AddSingleton<IDeviceSelector, DeviceSelector>();
+
+builder.Services.AddSingleton<IOpenFiles, LIN.Inventory.Web.Client.Services.File>();
 builder.Services.AddRealTime();
 
 var app = builder.Build();
-app.Services.UseRealTime("Web", "web", Scripts.Build());
+app.Services.UseRealTime("Web", "web", Scripts.Get(app.Services));
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

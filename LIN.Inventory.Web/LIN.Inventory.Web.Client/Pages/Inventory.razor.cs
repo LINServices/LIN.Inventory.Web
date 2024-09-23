@@ -1,8 +1,4 @@
 ﻿using LIN.Access.Inventory.Controllers;
-using LIN.Inventory.Shared.Services;
-using LIN.Inventory.Web.Client.Services;
-using LIN.Inventory.Web.Client.Pages;
-using LIN.Inventory.Web.Client.Layout;
 
 namespace LIN.Inventory.Web.Client.Pages;
 
@@ -14,6 +10,16 @@ public partial class Inventory
     /// </summary>
     private bool IsLoading = false;
 
+
+    public static Inventory? instance = null;
+
+
+
+
+    public Inventory()
+    {
+        instance = this;
+    }
 
 
     /// <summary>
@@ -53,7 +59,7 @@ public partial class Inventory
 
 
         foreach (var item in result.Models)
-            InventoryContext.PostAndReplace(item);
+            InventoryManager.PostAndReplace(item);
 
         // Nuevos estados.
         IsLoading = false;
@@ -118,12 +124,12 @@ public partial class Inventory
     /// Agregar modelo.
     /// </summary>
     /// <param name="model">Modelo de inventario.</param>
-    public static void AddData(InventoryDataModel model)
+    public  void AddData(InventoryDataModel model)
     {
         if (Response?.Response != Responses.Success)
             return;
 
-        InventoryContext.Post(model);
+        InventoryManager.Post(model);
         Response.Models.Add(model);
 
     }
