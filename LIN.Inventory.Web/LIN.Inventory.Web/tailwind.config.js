@@ -27,8 +27,16 @@ module.exports = {
                     '900': '#314027',
                     '950': '#172211'
                 }
+            },
+            keyframes: {
+                'fade-in': {
+                    '0%': { opacity: '0' },
+                    '100%': { opacity: '1' },
+                },
+            },
+            animation: {
+                'fade-in': 'fade-in 0.1s ease-in-out forwards',
             }
-
         }
     },
     plugins: [],

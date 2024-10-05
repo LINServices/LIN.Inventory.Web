@@ -33,4 +33,6 @@ LIN.Access.Search.Build.Init();
 var app = builder.Build();
 app.Services.UseRealTime("Web client", "WEB", Scripts.Get(app.Services));
 
+LIN.Access.Search.Build.Init();
+
 await builder.Build().RunAsync();

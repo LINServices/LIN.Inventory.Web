@@ -33,7 +33,7 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();
-
+LIN.Access.Search.Build.Init();
 app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(LIN.Inventory.Web.Client._Imports).Assembly);
