@@ -7,10 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LIN.Inventory.Web", "LIN.In
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LIN.Inventory.Web.Client", "LIN.Inventory.Web\LIN.Inventory.Web.Client\LIN.Inventory.Web.Client.csproj", "{73DA4859-EF45-437C-8A92-5A090AC9CEDB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LIN.Access.Auth", "D:\LIN Services\AccesoAPI\LIN.Access.Auth\LIN.Access.Auth.csproj", "{2D909FC7-6A98-4C9B-8F52-22F5BB9B81A7}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LIN.Access.Inventory", "D:\LIN Services\AccesoAPI\LIN.Access.Inventory\LIN.Access.Inventory.csproj", "{52F3C3A9-85AD-44CA-AFE3-20CCF8861C19}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LIN.Emma.UI", "..\..\Components\LIN.Emma.UI\LIN.Emma.UI\LIN.Emma.UI.csproj", "{D5265888-1703-4710-B7FC-4A20A600642A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LIN.Access.Search", "..\..\AccesoAPI\LIN.Access.Search\LIN.Access.Search.csproj", "{0312307B-92EA-49A7-8A97-9998ADB87FE2}"
@@ -33,14 +29,6 @@ Global
 		{73DA4859-EF45-437C-8A92-5A090AC9CEDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73DA4859-EF45-437C-8A92-5A090AC9CEDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{73DA4859-EF45-437C-8A92-5A090AC9CEDB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2D909FC7-6A98-4C9B-8F52-22F5BB9B81A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2D909FC7-6A98-4C9B-8F52-22F5BB9B81A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2D909FC7-6A98-4C9B-8F52-22F5BB9B81A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2D909FC7-6A98-4C9B-8F52-22F5BB9B81A7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{52F3C3A9-85AD-44CA-AFE3-20CCF8861C19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{52F3C3A9-85AD-44CA-AFE3-20CCF8861C19}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{52F3C3A9-85AD-44CA-AFE3-20CCF8861C19}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{52F3C3A9-85AD-44CA-AFE3-20CCF8861C19}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D5265888-1703-4710-B7FC-4A20A600642A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D5265888-1703-4710-B7FC-4A20A600642A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5265888-1703-4710-B7FC-4A20A600642A}.Release|Any CPU.ActiveCfg = Release|Any CPU

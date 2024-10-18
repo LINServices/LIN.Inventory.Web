@@ -17,12 +17,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.10" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\AccesoAPI\LIN.Access.Auth\LIN.Access.Auth.csproj" />
-    <ProjectReference Include="..\..\..\..\AccesoAPI\LIN.Access.Inventory\LIN.Access.Inventory.csproj" />
     <ProjectReference Include="..\..\..\..\AccesoAPI\LIN.Access.Search\LIN.Access.Search.csproj" />
     <ProjectReference Include="..\..\..\..\Components\LIN.Emma.UI\LIN.Emma.UI\LIN.Emma.UI.csproj" />
     <ProjectReference Include="..\..\..\..\Components\LIN.Inventory.Shared\LIN.Inventory.Shared.csproj" />

@@ -162,7 +162,7 @@ public partial class Settings
             var model = new InventoryAcessDataModel
             {
                 Inventario = int.Parse(Id),
-                ProfileID = e.Profile.ID,
+                ProfileID = e.Profile.Id,
                 Rol = InventoryRoles.Member
             };
             await InventoryAccess.Create(model, Session.Instance.Token);
