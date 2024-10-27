@@ -11,6 +11,7 @@ public partial class Inventory
     private bool IsLoading = false;
 
 
+
     public static Inventory? instance = null;
 
 
