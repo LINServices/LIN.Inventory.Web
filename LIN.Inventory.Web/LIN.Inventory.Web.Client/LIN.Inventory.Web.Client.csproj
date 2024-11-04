@@ -9,14 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Pages\Error.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Pages\Error.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.10" />
   </ItemGroup>
 
@@ -24,12 +16,6 @@
     <ProjectReference Include="..\..\..\..\AccesoAPI\LIN.Access.Search\LIN.Access.Search.csproj" />
     <ProjectReference Include="..\..\..\..\Components\LIN.Emma.UI\LIN.Emma.UI\LIN.Emma.UI.csproj" />
     <ProjectReference Include="..\..\..\..\Components\LIN.Inventory.Shared\LIN.Inventory.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="Pages\Home.razor">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-    </Content>
   </ItemGroup>
 
 </Project>

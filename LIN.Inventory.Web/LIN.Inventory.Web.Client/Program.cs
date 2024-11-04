@@ -1,7 +1,6 @@
 global using LIN.Access.Auth.Hubs;
 global using LIN.Access.Inventory;
 global using LIN.Inventory.Realtime.Manager.Interfaces;
-global using LIN.Inventory.Realtime.Manager.Observers;
 global using LIN.Inventory.Shared.Drawers;
 global using LIN.Inventory.Shared.Popup;
 global using LIN.Inventory.Shared.Utilities;
@@ -13,7 +12,6 @@ global using LIN.Types.Inventory.Models;
 global using LIN.Types.Inventory.Transient;
 global using LIN.Types.Responses;
 global using Microsoft.AspNetCore.Components;
-using Global.Http;
 using LIN.Access.Auth;
 using LIN.Inventory.Realtime.Extensions;
 using LIN.Inventory.Shared.Interfaces;
@@ -22,7 +20,6 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
-//
 builder.Services.AddSingleton<IDeviceSelector, DeviceSelector>();
 builder.Services.AddSingleton<IOpenFiles, LIN.Inventory.Web.Client.Services.File>();
 builder.Services.AddAuthenticationService();
