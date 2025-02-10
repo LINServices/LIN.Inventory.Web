@@ -24,11 +24,12 @@ builder.Services.AddSingleton<IDeviceSelector, DeviceSelector>();
 builder.Services.AddSingleton<IOpenFiles, LIN.Inventory.Web.Client.Services.File>();
 builder.Services.AddAuthenticationService();
 builder.Services.AddRealTime();
-LIN.Access.Inventory.Build.Init();
+
+builder.Services.AddInventoryService();
 LIN.Access.Search.Build.Init();
 
 var app = builder.Build();
-app.Services.UseRealTime("Web client", "WEB", Scripts.Get(app.Services));
+app.Services.UseRealTime("Web client", "WEB", Scripts.Get(app.Services), []);
 
 LIN.Access.Search.Build.Init();
 

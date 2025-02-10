@@ -16,7 +16,7 @@ builder.Services.AddSingleton<IOpenFiles, LIN.Inventory.Web.Client.Services.File
 builder.Services.AddRealTime();
 
 var app = builder.Build();
-app.Services.UseRealTime("Web", "web", Scripts.Get(app.Services));
+app.Services.UseRealTime("Web", "web", Scripts.Get(app.Services), []);
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
