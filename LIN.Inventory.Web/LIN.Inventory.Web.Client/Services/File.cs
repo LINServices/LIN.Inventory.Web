@@ -13,7 +13,6 @@ public class File : IOpenFiles
         return await Open();
     }
 
-
     /// <summary>
     /// Carga la imagen de perfil
     /// </summary>
