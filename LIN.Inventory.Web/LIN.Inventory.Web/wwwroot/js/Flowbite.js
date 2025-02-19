@@ -1,5 +1,5 @@
 ﻿/**
- * Abre un Drawer
+ * Abre un Drawer.
  * @param {string} id - El ID del elemento del Drawer.
  * @param {object} dotnetHelper - El objeto DotNetHelper para invocar métodos de .NET.
  * @param {...string} idCloseBtn - IDs de los botones que cierran el Drawer.
@@ -25,9 +25,8 @@ function showDrawer(id, dotnetHelper, ...idCloseBtn) {
     });
 }
 
-
 /**
- * Muestra un Popover
+ * Muestra un Popover.
  * @param {string} id - El ID del elemento del Popover.
  * @param {string} btn - El ID del elemento que activa el Popover.
  * @param {object} dotnetHelper - El objeto DotNetHelper para invocar métodos de .NET.
@@ -46,7 +45,6 @@ function showPopover(id, btn, dotnetHelper) {
 
     new Popover(targetEl, triggerEl, options);
 }
-
 
 /**
  * Muestra un Modal
@@ -76,7 +74,6 @@ function showModal(id, dotnetHelper, ...idCloseBtn) {
         }
     });
 }
-
 
 /**
  * Abre un Dropdown
@@ -111,7 +108,6 @@ function openDropDown(id, idOpen, dotnetHelper, ...idCloseBtn) {
     dropdown.toggle();
 }
 
-
 /**
  * Abre un Dropdown específico para el usuario
  */
@@ -134,9 +130,8 @@ function showUserDropdown(dotnetHelper) {
     dropdown.toggle();
 }
 
-
 /**
- * Abre o cierra el menú móvil
+ * Abre o cierra el menú móvil.
  */
 function toggleMobileMenu() {
     const targetEl = document.getElementById('mobile-menu-2');
