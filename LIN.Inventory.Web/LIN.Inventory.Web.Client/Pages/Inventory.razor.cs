@@ -79,7 +79,7 @@ public partial class Inventory
         if (e == null)
             return;
 
-        nav.NavigateTo($"/products/{e.ID}");
+        nav.NavigateTo($"/products/{e.Id}");
     }
 
 

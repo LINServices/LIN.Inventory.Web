@@ -16,8 +16,6 @@ public partial class EditProduct
 
 
 
-    string Img64 => Convert.ToBase64String(Photo ?? []);
-
 
     /// <summary>
     /// Modelo del producto.
@@ -33,7 +31,7 @@ public partial class EditProduct
     /// <summary>
     /// Imagen.
     /// </summary>
-    public byte[] Photo { get; set; } = [];
+    public string Photo { get; set; } = string.Empty;
 
 
     string ErrorMessage = "";
@@ -44,13 +42,13 @@ public partial class EditProduct
 
     async void OpenImage()
     {
-        Photo = await Services.File.Open();
+      //  Photo =  await Services.File.Open();
         isNewPhoto = true;
         StateHasChanged();
     }
 
 
-    async void SetImage(byte[] photo)
+    async void SetImage(string photo)
     {
 
         Photo = photo;
@@ -61,7 +59,7 @@ public partial class EditProduct
 
     async void DeleteImage()
     {
-        Photo = [];
+        Photo = string.Empty;
         isNewPhoto = true;
         StateHasChanged();
     }

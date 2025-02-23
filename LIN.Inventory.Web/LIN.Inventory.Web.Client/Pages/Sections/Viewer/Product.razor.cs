@@ -156,7 +156,7 @@ public partial class Product
             return "./img/Products/packages.png";
         }
 
-        return $"data:image/png;base64,{Convert.ToBase64String(Modelo?.Image ?? [])}";
+        return Modelo?.Image;
 
 
     }

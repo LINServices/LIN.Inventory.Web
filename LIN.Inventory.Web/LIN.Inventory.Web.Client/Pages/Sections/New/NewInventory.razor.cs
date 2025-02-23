@@ -69,7 +69,7 @@ public partial class NewInventory
             modelo.UsersAccess.Add(new()
             {
 
-                ProfileID = Session.Instance.Information.Id
+                ProfileId = Session.Instance.Information.Id
             });
 
             // Otros participantes
@@ -78,7 +78,7 @@ public partial class NewInventory
                 notificationList.Add(user.Profile.Id);
                 modelo.UsersAccess.Add(new()
                 {
-                    ProfileID = user.Profile.Id,
+                    ProfileId = user.Profile.Id,
                     Rol = InventoryRoles.Member
                 });
             }
@@ -95,7 +95,7 @@ public partial class NewInventory
             StateHasChanged();
         }
 
-        var x = await Inventories.Read(response.LastID, Session.Instance.Token);
+        var x = await Inventories.Read(response.LastId, Session.Instance.Token);
 
 
 
