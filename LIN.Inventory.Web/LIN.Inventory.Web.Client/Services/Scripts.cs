@@ -4,6 +4,7 @@ using LIN.Inventory.Realtime.Script;
 using LIN.Inventory.Web.Client.Pages;
 using LIN.Inventory.Web.Client.Pages.Sections;
 using LIN.Inventory.Web.Client.Pages.Sections.Viewer;
+using SILF.Script.DotnetRun.Interop;
 using SILF.Script.Interfaces;
 
 namespace LIN.Inventory.Web.Client.Services;
@@ -11,516 +12,266 @@ namespace LIN.Inventory.Web.Client.Services;
 public class Scripts
 {
 
-    /// <summary>
-    /// Construye las funciones.
-    /// </summary>
-    public static List<IFunction> Get(IServiceProvider provider)
+    [SILFFunctionName("updateCt")]
+    private static void UpdateContacts() => Contactos.ToUpdate();
+
+    [SILFFunctionName("viewContact")]
+    private static async void ViewContact(decimal id)
     {
 
-        // Función de actualizar contactos.
-        SILFFunction updateContacts = new((values) =>
-        {
-            Contactos.ToUpdate();
-        })
-        // Propiedades
-        {
-            Name = "updateCt",
-            Parameters = []
-        };
+        // Obtener el contacto.
+        ContactModel? contact = Contactos.Response?.Models.FirstOrDefault(t => t.Id == id);
 
-        // Visualizar un contacto.
-        SILFFunction viewContact = new(async (values) =>
+        // Validar.
+        if (contact is null)
         {
+            // Obtener desde la web.
+            var response = await Access.Inventory.Controllers.Contact.Read((int)id, Session.Instance.ContactsToken);
 
-            // Obtener el parámetro.
-            var value = values.FirstOrDefault(t => t.Name == "id")?.Objeto.GetValue();
-
-            // Validar el tipo.
-            if (value is not decimal)
+            // Error.
+            if (response.Response != Responses.Success)
                 return;
 
-            // Id.
-            var id = (int)((value as decimal?) ?? 0);
+            // Establecer.
+            contact = response.Model;
+        }
 
-            // Obtener el contacto.
-            ContactModel? contact = Contactos.Response?.Models.FirstOrDefault(t => t.Id == id);
+        // Abrir el pop.
+        MainLayout.ContactPop.Show(contact);
+    }
 
-            // Validar.
-            if (contact == null)
-            {
-                // Obtener desde la web.
-                var response = await Access.Inventory.Controllers.Contact.Read(id, Session.Instance.ContactsToken);
+    [SILFFunctionName("viewProduct")]
+    private static async void ViewProduct(IServiceProvider provider, decimal inventory, decimal id)
+    {
 
-                // Error.
-                if (response.Response != Responses.Success)
-                    return;
+        var manager = provider.GetService<IInventoryManager>();
 
-                // Establecer.
-                contact = response.Model;
-            }
+        var context = manager.Get((int)inventory);
 
-            // Abrir el pop.
-            MainLayout.ContactPop.Show(contact);
+        var find = context?.FindProduct((int)id);
 
-        })
-        // Propiedades
+        if (context == null || find == null)
         {
-            Name = "viewContact",
-            Parameters =
-            [
-                new("id", new("number"))
-            ]
-        };
+            var xx = await LIN.Access.Inventory.Controllers.Product.Read((int)id, Session.Instance.Token);
 
-        // Visualizar un producto.
-        SILFFunction viewProduct = new(async (values) =>
-        {
-
-            // Obtener el parámetro.
-            var value = values.FirstOrDefault(t => t.Name == "id")?.Objeto.GetValue();
-
-            // Validar el tipo.
-            if (value is not decimal)
+            if (xx.Response != Responses.Success)
                 return;
 
-            // Id.
-            var id = (int)((value as decimal?) ?? 0);
+
+            find = xx.Model;
+
+        }
+
+        Products.Selected = find;
+        Product.Show();
+    }
+
+    [SILFFunctionName("viewInflow")]
+    private static void ViewInflow(decimal id)
+    {
+        Entrada.Show((int)id);
+    }
+
+    [SILFFunctionName("viewOutflow")]
+    private static void ViewOutflow(decimal id)
+    {
+        Salida.Show((int)id);
+    }
+
+    [SILFFunctionName("addProduct")]
+    private static async Task AddProduct(IServiceProvider provider, decimal id)
+    {
+        // Producto.
+        var product = await LIN.Access.Inventory.Controllers.Product.Read((int)id, Session.Instance.Token);
+
+        if (product.Response != Responses.Success)
+            return;
+
+        var manager = provider.GetService<IInventoryManager>();
+
+        // Contexto.
+        var context = manager.Get(product.Model.InventoryId);
+
+        // Si no se encontró.
+        if (context == null)
+            return;
+
+        if (context.Products != null && context.Products.Response == Responses.Success)
+            context.Products.Models.Add(product.Model);
+
+        var observer = provider.GetService<IInventoryObserver>();
+
+        observer.Update(context.Inventory.Id);
+    }
+
+    [SILFFunctionName("addInflow")]
+    private static async Task AddInflow(IServiceProvider provider, decimal id)
+    {
+
+        // Producto.
+        var inflow = await LIN.Access.Inventory.Controllers.Inflows.Read((int)id, Session.Instance.Token, true);
+
+        if (inflow.Response != Responses.Success)
+            return;
+
+        var manager = provider.GetService<IInventoryManager>();
 
 
-            // Obtener el parámetro.
-            value = values.FirstOrDefault(t => t.Name == "inventory")?.Objeto.GetValue();
+        // Contexto.
+        var context = manager.Get(inflow.Model.InventoryId);
 
-            // Validar el tipo.
-            if (value is not decimal)
-                return;
+        // Si no se encontró.
+        if (context == null)
+            return;
 
-            // Id.
-            var inventory = (int)((value as decimal?) ?? 0);
+        if (context.Inflows != null && context.Inflows.Response == Responses.Success)
+            context.Inflows.Models.Insert(0, inflow.Model);
 
-            var manager = provider.GetService<IInventoryManager>();
-
-
-            var context = manager.Get(inventory);
-
-            var find = context?.FindProduct(id);
-
-            if (context == null || find == null)
-            {
-                var xx = await LIN.Access.Inventory.Controllers.Product.Read(id, Session.Instance.Token);
-
-                if (xx.Response != Responses.Success)
-                    return;
-
-
-                find = xx.Model;
-
-            }
-
-            Products.Selected = find;
-            Product.Show();
-
-        })
-        // Propiedades
+        // Actualizar la cantidad.
+        foreach (var item in inflow.Model.Details)
         {
-            Name = "viewProduct",
-            Parameters =
-            [
-                new("inventory", new("number")),
-                new("id", new("number")),
-            ]
-        };
-
-
-        // Visualizar un inflow.
-        SILFFunction viewInflow = new((values) =>
-        {
-
-            // Obtener el parámetro.
-            var value = values.FirstOrDefault(t => t.Name == "id")?.Objeto.GetValue();
-
-            // Validar el tipo.
-            if (value is not decimal)
-                return;
-
-            // Id.
-            var id = (int)((value as decimal?) ?? 0);
-
-
-            Entrada.Show(id);
-
-        })
-        // Propiedades
-        {
-            Name = "viewInflow",
-            Parameters =
-            [
-                new("id", new("number")),
-            ]
-        };
-
-
-
-        // Visualizar un outflow.
-        SILFFunction viewOutflow = new((values) =>
-        {
-
-            // Obtener el parámetro.
-            var value = values.FirstOrDefault(t => t.Name == "id")?.Objeto.GetValue();
-
-            // Validar el tipo.
-            if (value is not decimal)
-                return;
-
-            // Id.
-            var id = (int)((value as decimal?) ?? 0);
-
-
-            Salida.Show(id);
-
-        })
-        // Propiedades
-        {
-            Name = "viewOutflow",
-            Parameters =
-            [
-                new("id", new("number")),
-            ]
-        };
-
-
-        // Agregar producto.
-        SILFFunction addProduct = new(async (values) =>
-        {
-
-            // Obtener el parámetro.
-            var value = values.FirstOrDefault(t => t.Name == "id")?.Objeto.GetValue();
-
-            if (value is not decimal)
-                return;
-
-            var id = (int)((value as decimal?) ?? 0);
-
-
-
-            // Producto.
-            var product = await LIN.Access.Inventory.Controllers.Product.Read(id, Session.Instance.Token);
-
-            if (product.Response != Responses.Success)
-                return;
-
-            var manager = provider.GetService<IInventoryManager>();
-
-            // Contexto.
-            var context = manager.Get(product.Model.InventoryId);
-
-            // Si no se encontró.
-            if (context == null)
-                return;
-
-            if (context.Products != null && context.Products.Response == Responses.Success)
-                context.Products.Models.Add(product.Model);
-
-            var observer = provider.GetService<IInventoryObserver>();
-
-            observer.Update(context.Inventory.Id);
-
-
-        })
-        // Propiedades
-        {
-            Name = "addProduct",
-            Parameters =
-            [
-                new("id", new("number"))
-            ]
-        };
-
-
-        // Agregar entrada.
-        SILFFunction addInflow = new(async (values) =>
-        {
-
-            // Obtener el parámetro.
-            var value = values.FirstOrDefault(t => t.Name == "id")?.Objeto.GetValue();
-
-            if (value is not decimal)
-                return;
-
-            var id = (int)((value as decimal?) ?? 0);
-
-
-            // Producto.
-            var inflow = await LIN.Access.Inventory.Controllers.Inflows.Read(id, Session.Instance.Token, true);
-
-            if (inflow.Response != Responses.Success)
-                return;
-
-            var manager = provider.GetService<IInventoryManager>();
-
-
-            // Contexto.
-            var context = manager.Get(inflow.Model.InventoryId);
-
-            // Si no se encontró.
-            if (context == null)
-                return;
-
-            if (context.Inflows != null && context.Inflows.Response == Responses.Success)
-                context.Inflows.Models.Insert(0, inflow.Model);
-
+            // Detalle.
+            var product = context.Products?.Models.Where(t => t.DetailModel?.Id == item.ProductDetailId).FirstOrDefault();
 
             // Actualizar la cantidad.
-            foreach (var item in inflow.Model.Details)
-            {
-                // Detalle.
-                var product = context.Products?.Models.Where(t => t.DetailModel?.Id == item.ProductDetailId).FirstOrDefault();
+            if (product != null && product.DetailModel != null)
+                product.DetailModel.Quantity += item.Cantidad;
 
-                // Actualizar la cantidad.
-                if (product != null && product.DetailModel != null)
-                    product.DetailModel.Quantity += item.Cantidad;
+        }
 
-            }
+        inflow.Model.CountDetails = inflow.Model.Details.Count;
 
-            inflow.Model.CountDetails = inflow.Model.Details.Count;
+        var pObserver = provider.GetService<IInventoryObserver>();
+        var iObserver = provider.GetService<IInflowObserver>();
 
-            var pObserver = provider.GetService<IInventoryObserver>();
-            var iObserver = provider.GetService<IInflowObserver>();
+        pObserver.Update(context.Inventory.Id);
+        iObserver.Update(context.Inventory.Id);
+    }
 
+    [SILFFunctionName("addOutflow")]
+    private static async Task AddOutflow(IServiceProvider provider, decimal id)
+    {
 
-            pObserver.Update(context.Inventory.Id);
-            iObserver.Update(context.Inventory.Id);
+        // Producto.
+        var outflow = await LIN.Access.Inventory.Controllers.Outflows.Read((int)id, Session.Instance.Token, true);
 
+        if (outflow.Response != Responses.Success)
+            return;
 
-        })
-        // Propiedades
+        var manager = provider.GetService<IInventoryManager>();
+
+        // Contexto.
+        var context = manager.Get(outflow.Model.InventoryId);
+
+        // Si no se encontró.
+        if (context == null)
+            return;
+
+        if (context.Outflows != null && context.Outflows.Response == Responses.Success)
+            context.Outflows.Models.Insert(0, outflow.Model);
+
+        // Actualizar la cantidad.
+        foreach (var item in outflow.Model.Details)
         {
-            Name = "addInflow",
-            Parameters =
-            [
-                new("id", new("number")),
-                new("increase", new("bool"))
-            ]
-        };
-
-
-        // Agregar salida.
-        SILFFunction addOutflow = new(async (values) =>
-        {
-
-            // Obtener el parámetro.
-            var value = values.FirstOrDefault(t => t.Name == "id")?.Objeto.GetValue();
-
-            if (value is not decimal)
-                return;
-
-            var id = (int)((value as decimal?) ?? 0);
-
-            // Producto.
-            var outflow = await LIN.Access.Inventory.Controllers.Outflows.Read(id, Session.Instance.Token, true);
-
-            if (outflow.Response != Responses.Success)
-                return;
-
-            var manager = provider.GetService<IInventoryManager>();
-
-            // Contexto.
-            var context = manager.Get(outflow.Model.InventoryId);
-
-            // Si no se encontró.
-            if (context == null)
-                return;
-
-            if (context.Outflows != null && context.Outflows.Response == Responses.Success)
-                context.Outflows.Models.Insert(0, outflow.Model);
+            // Detalle.
+            var product = context.Products?.Models.Where(t => t.DetailModel?.Id == item.ProductDetailId).FirstOrDefault();
 
             // Actualizar la cantidad.
-            foreach (var item in outflow.Model.Details)
-            {
-                // Detalle.
-                var product = context.Products?.Models.Where(t => t.DetailModel?.Id == item.ProductDetailId).FirstOrDefault();
+            if (product != null && product.DetailModel != null)
+                product.DetailModel.Quantity -= item.Cantidad;
 
-                // Actualizar la cantidad.
-                if (product != null && product.DetailModel != null)
-                    product.DetailModel.Quantity -= item.Cantidad;
+        }
 
-            }
+        outflow.Model.CountDetails = outflow.Model.Details.Count;
 
-            outflow.Model.CountDetails = outflow.Model.Details.Count;
+        var pObserver = provider.GetService<IInventoryObserver>();
+        var oObserver = provider.GetService<IOutflowObserver>();
 
-            var pObserver = provider.GetService<IInventoryObserver>();
-            var oObserver = provider.GetService<IOutflowObserver>();
+        pObserver.Update(context.Inventory.Id);
+        oObserver.Update(context.Inventory.Id);
+    }
 
-            pObserver.Update(context.Inventory.Id);
-            oObserver.Update(context.Inventory.Id);
+    [SILFFunctionName("newInvitation")]
+    private static async Task NewInvitation(IServiceProvider provider, decimal id)
+    {
+        // Modelo.
+        var notification = await Access.Inventory.Controllers.InventoryAccess.ReadNotification((int)id, Session.Instance.Token);
 
 
-        })
-        // Propiedades
+        if (notification == null || notification.Response != Responses.Success)
+            return;
+
+        var manager = provider.GetService<INotificationObserver>();
+
+        manager.Append(notification.Model);
+
+    }
+
+    [SILFFunctionName("newInvitation")]
+    private static void NewStateInvitation(IServiceProvider provider, decimal id)
+    {
+
+        var manager = provider.GetService<INotificationObserver>();
+
+        manager.Delete((int)id);
+    }
+
+    [SILFFunctionName("updateProduct")]
+    private static async Task UpdateProduct(IServiceProvider provider, decimal id)
+    {
+
+        // Obtener el contacto.
+        var x = await LIN.Access.Inventory.Controllers.Product.Read((int)id, Session.Instance.Token);
+
+        var manager = provider.GetService<IInventoryManager>();
+
+        var context = manager.Get(x.Model.InventoryId);
+
+
+        var exist = context?.FindProduct(x.Model.Id);
+
+        if (exist == null)
         {
-            Name = "addOutflow",
-            Parameters =
-            [
-                new("id", new("number")),
-                new("decrement", new("bool"))
-            ]
-        };
-
-
-        // Agregar salida.
-        SILFFunction newInvitation = new(async (values) =>
+            context?.Products?.Models.Add(x.Model);
+            exist = x.Model;
+        }
+        else
         {
+            exist.Image = x.Model.Image;
+            exist.Category = x.Model.Category;
+            exist.Code = x.Model.Code;
+            exist.Description = x.Model.Description;
+            exist.Name = x.Model.Name;
+            exist.DetailModel.PrecioCompra = x.Model.DetailModel.PrecioCompra;
+            exist.DetailModel.PrecioVenta = x.Model.DetailModel.PrecioVenta;
+        }
 
-            // Obtener el parámetro.
-            var value = values.FirstOrDefault(t => t.Name == "id")?.Objeto.GetValue();
-
-            if (value is not decimal)
-                return;
-
-            var id = (int)((value as decimal?) ?? 0);
-
-
-            // Modelo.
-            var notification = await Access.Inventory.Controllers.InventoryAccess.ReadNotification(id, Session.Instance.Token);
+        var pObserver = provider.GetService<IInventoryObserver>();
 
 
-            if (notification == null || notification.Response != Responses.Success)
-                return;
+        pObserver.Update(exist.InventoryId);
+    }
 
-            var manager = provider.GetService<INotificationObserver>();
+    [SILFFunctionName("deleteProduct")]
+    private static void DeleteProduct(IServiceProvider provider, decimal id)
+    {
 
-            manager.Append(notification.Model);
+        var manager = provider.GetService<IInventoryManager>();
 
-        })
-        // Propiedades
-        {
-            Name = "newInvitation",
-            Parameters =
-            [
-                new("id", new("number"))
-            ]
-        };
+        var context = manager.GetProduct((int)id);
+        if (context == null)
+            return;
 
+        context.Statement = Types.Inventory.Enumerations.ProductBaseStatements.Deleted;
 
-        // Agregar salida.
-        SILFFunction newStateInvitation = new((values) =>
-        {
+        var pObserver = provider.GetService<IInventoryObserver>();
+        pObserver.Update(context.InventoryId);
+    }
 
-            // Obtener el parámetro.
-            var value = values.FirstOrDefault(t => t.Name == "id")?.Objeto.GetValue();
-
-            if (value is not decimal)
-                return;
-
-            var id = (int)((value as decimal?) ?? 0);
-
-            var manager = provider.GetService<INotificationObserver>();
-
-            manager.Delete(id);
-
-        })
-        // Propiedades
-        {
-            Name = "newStateInvitation",
-            Parameters =
-            [
-                new("id", new("number"))
-            ]
-        };
-
-
-
-        SILFFunction updateProduct = new(async (values) =>
-        {
-
-            // Obtener el parámetro.
-            var value = values.FirstOrDefault(t => t.Name == "id")?.Objeto.GetValue();
-
-            // Validar el tipo.
-            if (value is not decimal)
-                return;
-
-            // Id.
-            var id = (int)((value as decimal?) ?? 0);
-
-            // Obtener el contacto.
-            var x = await LIN.Access.Inventory.Controllers.Product.Read(id, Session.Instance.Token);
-
-            var manager = provider.GetService<IInventoryManager>();
-
-            var context = manager.Get(x.Model.InventoryId);
-
-
-            var exist = context?.FindProduct(x.Model.Id);
-
-            if (exist == null)
-            {
-                context?.Products?.Models.Add(x.Model);
-                exist = x.Model;
-            }
-            else
-            {
-                exist.Image = x.Model.Image;
-                exist.Category = x.Model.Category;
-                exist.Code = x.Model.Code;
-                exist.Description = x.Model.Description;
-                exist.Name = x.Model.Name;
-                exist.DetailModel.PrecioCompra = x.Model.DetailModel.PrecioCompra;
-                exist.DetailModel.PrecioVenta = x.Model.DetailModel.PrecioVenta;
-            }
-
-            var pObserver = provider.GetService<IInventoryObserver>();
-
-
-            pObserver.Update(exist.InventoryId);
-
-
-        })
-        // Propiedades
-        {
-            Name = "updateProduct",
-            Parameters =
-            [
-                new("id", new("number"))
-            ]
-        };
-
-
-
-        SILFFunction deleteProduct = new((values) =>
-        {
-
-            // Obtener el parámetro.
-            var value = values.FirstOrDefault(t => t.Name == "id")?.Objeto.GetValue();
-
-            // Validar el tipo.
-            if (value is not decimal)
-                return;
-
-            // Id.
-            var id = (int)((value as decimal?) ?? 0);
-
-            var manager = provider.GetService<IInventoryManager>();
-
-            var context = manager.GetProduct(id);
-            if (context == null)
-                return;
-
-            context.Statement = Types.Inventory.Enumerations.ProductBaseStatements.Deleted;
-
-            var pObserver = provider.GetService<IInventoryObserver>();
-            pObserver.Update(context.InventoryId);
-        })
-        // Propiedades
-        {
-            Name = "deleteProduct",
-            Parameters =
-        [
-            new("id", new("number"))
-        ]
-        };
-
-        // Guardar métodos.
-        return [updateContacts, viewContact, viewProduct, addProduct, addInflow, addOutflow, newInvitation, newStateInvitation, viewInflow, viewOutflow, updateProduct, deleteProduct];
+    public static List<Delegate> Get(IServiceProvider provider)
+    {
+        SILF.Script.App.LoadGlobalDI(provider);
+        return [UpdateContacts, ViewContact, ViewProduct, ViewInflow, DeleteProduct, UpdateProduct, NewStateInvitation, NewInvitation, AddOutflow, AddInflow, AddProduct, ViewOutflow];
     }
 
 }

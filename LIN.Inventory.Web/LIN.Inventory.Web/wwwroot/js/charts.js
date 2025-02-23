@@ -20,5 +20,5 @@ try {
 }
 catch (ex)
 {
-   
+    console.error(ex);
 }

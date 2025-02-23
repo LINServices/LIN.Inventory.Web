@@ -246,7 +246,7 @@ public partial class Login
     {
         if (deviceManager is DeviceManager db)
         {
-            db.Actions = Scripts.Get(provider);
+            db.Delegates = Scripts.Get(provider);
         }
     }
 

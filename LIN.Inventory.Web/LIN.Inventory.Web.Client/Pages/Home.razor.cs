@@ -1,30 +1,23 @@
 ﻿namespace LIN.Inventory.Web.Client.Pages;
 
-
 public partial class Home : IDisposable, INotificationModelObserver
 {
-
 
     /// <summary>
     /// Emma IA.
     /// </summary>
     private EmmaDrawer EmmaIA { get; set; } = null!;
 
-
-
     /// <summary>
     /// Chart.
     /// </summary>
     private Chart Chart { get; set; } = null!;
-
-
 
     /// <summary>
     /// Evento al inicializar.
     /// </summary>
     protected override async void OnInitialized()
     {
-
         MainLayout.Configure(new()
         {
             OnCenterClick = () => { EmmaIA.Show(); },
@@ -38,7 +31,6 @@ public partial class Home : IDisposable, INotificationModelObserver
         StateHasChanged();
         base.OnInitialized();
     }
-
 
 
     /// <summary>
