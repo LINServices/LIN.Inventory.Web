@@ -7,7 +7,7 @@
 <PageTitle>Iniciar Sesión</PageTitle>
 
 @* Pantalla *@
-<div class="grid-cols-1 px-[-20px] grid max-h-dvh min-h-dvh w-full dl:grid-cols-2">
+<div class="px-[-20px] grid max-h-dvh min-h-dvh w-full grid-cols-1 dl:grid-cols-2">
 
     @* Contenido *@
     <div class="flex w-full items-center justify-center p-3">
@@ -19,7 +19,7 @@
             @if (Section == 0)
             {
                 @*Contenedor*@
-                <div class="z-10 flex-1 relative flex flex-col px-4 py-10 sm:justify-center md:flex-none md:px-28">
+                <div class="relative z-10 flex flex-1 flex-col px-4 py-10 sm:justify-center md:flex-none md:px-28">
                     <div class="mx-auto w-full max-w-md sm:px-4 md:w-96 md:max-w-sm md:px-0">
 
                         @* Header *@
@@ -67,7 +67,7 @@
                         </div>
 
                         @* Cuerpo *@
-                        <div class="grid-cols-1 mt-6 grid gap-4">
+                        <div class="mt-6 grid grid-cols-1 gap-4">
 
 
                             @*Usuario*@
@@ -111,7 +111,7 @@
 
                                 @* Botón de iniciar con llave *@
                                 <button @onclick="GotoLoginKey" type="button"
-                                        class="ml-2 flex w-20 items-center justify-center rounded-full bg-current-500 p-2.5 text-center text-sm font-medium text-white hover:bg-current-800 focus:ring-4 focus:outline-none focus:ring-current-300 dark:bg-current-600">
+                                        class="animate-button ml-2 flex w-20 items-center justify-center rounded-full bg-current-500 p-2.5 text-center text-sm font-medium text-white hover:bg-current-800 focus:ring-4 focus:outline-none focus:ring-current-300 dark:bg-current-600">
 
                                     @if (IsWithKey)
                                     {

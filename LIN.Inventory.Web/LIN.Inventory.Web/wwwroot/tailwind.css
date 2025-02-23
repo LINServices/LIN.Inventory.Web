@@ -6,6 +6,10 @@
     @apply [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-zinc-400 dark:[&::-webkit-scrollbar-thumb]:bg-zinc-800;
 }
 
+.animate-button {
+    @apply transition-transform duration-200 ease-out hover:scale-105;
+}
+
 @media (hover: none) and (pointer: coarse) {
     /* Estilos para la barra de desplazamiento bajo la clase HiddenScroll */
     .UIScroll::-webkit-scrollbar {
