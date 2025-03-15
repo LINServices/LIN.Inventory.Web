@@ -10,7 +10,6 @@
 
     <Header Tittle="Inventarios" GoBack="false">
 
-
         @* Actualizar. *@
         <button @onclick="()=>GetData(true)" type="button" class="h-9 w-9 rounded-full p-2">
             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="h-full w-full fill-zinc-800 hover:fill-zinc-600 dark:fill-zinc-200" version="1.1" id="Capa_1" viewBox="0 0 492.883 492.883" xml:space="preserve">
@@ -23,11 +22,7 @@
             </svg>
         </button>
 
-
-
     </Header>
-
-
 
     @* Header. *@
     <div class="mt-4">
@@ -54,14 +49,11 @@
         {
             <label class="text-sm text-zinc-400">Se encontraron @Response.Models.Count resultados</label>
         }
-
-
     </div>
 
 
     @* Componentes. *@
-    <div class="flex-1 UIScroll gap-2 overflow-auto">
-
+    <div class="UIScroll flex-1 gap-2 overflow-auto">
 
         @* Cargando *@
         @if (Response == null || IsLoading)
@@ -84,7 +76,7 @@
                         @* No hay elementos *@
                         @if (Response.Models.Count <= 0)
                         {
-                            <div class="border-2 mt-3 flex w-full items-center justify-center rounded-lg border-dashed border-zinc-300 py-7 dark:border-gray-400">
+                            <div class="mt-3 flex w-full items-center justify-center rounded-lg border-2 border-dashed border-zinc-300 py-7 dark:border-gray-400">
                                 <label class="text-zinc-400 dark:text-gray-200">No tienes ningún inventario</label>
                             </div>
                         }
@@ -103,14 +95,12 @@
                 @* Otros *@
                 default:
                     {
-                        <div class="border-2 mt-3 flex w-full items-center justify-center rounded-lg border-dashed border-zinc-300 py-7 dark:border-gray-400">
+                        <div class="mt-3 flex w-full items-center justify-center rounded-lg border-2 border-dashed border-zinc-300 py-7 dark:border-gray-400">
                             <label class="text-zinc-400 dark:text-gray-200">Error al obtener los inventarios</label>
                         </div>
                         break;
                     }
-
             }
-
         }
 
     </div>

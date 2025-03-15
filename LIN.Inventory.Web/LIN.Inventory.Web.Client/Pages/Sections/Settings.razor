@@ -51,7 +51,7 @@
 
 
     @* Componentes. *@
-    <div class="flex-1 UIScroll gap-2 overflow-auto">
+    <div class="UIScroll flex-1 gap-2 overflow-auto">
 
 
         @* Componentes. *@
@@ -65,9 +65,9 @@
 
                 var member = new LIN.Types.Inventory.Models.IntegrantDataModel
                     {
-                        Nombre = e.Account.Name,
+                        Name = e.Account.Name,
                         Rol = InventoryRoles.Undefined,
-                        Usuario = e.Account.Identity.Unique
+                        User = e.Account.Identity.Unique
                     };
 
                 <MemberControl Model="member" State="false"></MemberControl>
@@ -95,7 +95,7 @@
                         @* No hay elementos *@
                         @if (Response.Models.Count <= 0)
                         {
-                            <div class="border-2 mt-3 flex w-full items-center justify-center rounded-lg border-dashed border-zinc-300 py-7 dark:border-gray-400">
+                            <div class="mt-3 flex w-full items-center justify-center rounded-lg border-2 border-dashed border-zinc-300 py-7 dark:border-gray-400">
                                 <label class="text-zinc-400 dark:text-gray-200">No tienes ningún producto</label>
                             </div>
                         }
@@ -116,7 +116,7 @@
                 @* Otros *@
                 default:
                     {
-                        <div class="border-2 mt-3 flex w-full items-center justify-center rounded-lg border-dashed border-zinc-300 py-7 dark:border-gray-400">
+                        <div class="mt-3 flex w-full items-center justify-center rounded-lg border-2 border-dashed border-zinc-300 py-7 dark:border-gray-400">
                             <label class="text-zinc-400 dark:text-gray-200">Error al obtener los productos</label>
                         </div>
                         break;

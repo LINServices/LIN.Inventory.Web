@@ -126,7 +126,7 @@ public partial class NewInflow
             InflowDetailsDataModel model = new()
             {
 
-                Cantidad = quantity,
+                Quantity = quantity,
                 ProductDetail = new()
                 {
                     Id = control?.DetailModel?.Id ?? 0
@@ -156,7 +156,7 @@ public partial class NewInflow
                 Id = Contexto?.Inventory.Id ?? 0
             },
             InventoryId = Contexto?.Inventory.Id ?? 0,
-            ProfileID = Session.Instance.Information.Id
+            ProfileId = Session.Instance.Information.Id
         };
 
 

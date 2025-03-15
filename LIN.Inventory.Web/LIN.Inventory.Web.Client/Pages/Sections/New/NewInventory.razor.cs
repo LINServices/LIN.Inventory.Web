@@ -54,9 +54,9 @@ public partial class NewInventory
         // Creación del modelo
         var modelo = new InventoryDataModel()
         {
-            Nombre = Name,
+            Name = Name,
             Direction = Direction,
-            Creador = Session.Instance.Information.Id
+            CreatorId = Session.Instance.Information.Id
         };
 
 

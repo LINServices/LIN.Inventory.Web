@@ -180,13 +180,13 @@ public partial class Entrada
 
         switch (Modelo?.Type)
         {
-            case Types.Inventory.Enumerations.InflowsTypes.Compra:
+            case Types.Inventory.Enumerations.InflowsTypes.Purchase:
                 return "./img/Products/inflows/cart.png";
-            case Types.Inventory.Enumerations.InflowsTypes.Devolucion:
+            case Types.Inventory.Enumerations.InflowsTypes.Refund:
                 return "./img/Products/inflows/return.png";
-            case Types.Inventory.Enumerations.InflowsTypes.Regalo:
+            case Types.Inventory.Enumerations.InflowsTypes.Gift:
                 return "./img/Products/inflows/gift.png";
-            case Types.Inventory.Enumerations.InflowsTypes.Ajuste:
+            case Types.Inventory.Enumerations.InflowsTypes.Correction:
                 return "./img/Products/inflows/setting.png";
             default:
                 return "./img/Products/packages.png";

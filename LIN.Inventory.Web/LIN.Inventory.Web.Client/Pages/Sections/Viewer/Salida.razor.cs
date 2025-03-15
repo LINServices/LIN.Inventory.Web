@@ -212,17 +212,17 @@ public partial class Salida
 
         switch (Modelo?.Type)
         {
-            case Types.Inventory.Enumerations.OutflowsTypes.Consumo:
+            case Types.Inventory.Enumerations.OutflowsTypes.Usage:
                 return "./img/Products/outflows/seller.png";
-            case Types.Inventory.Enumerations.OutflowsTypes.Donacion:
+            case Types.Inventory.Enumerations.OutflowsTypes.Contribution:
                 return "./img/Products/outflows/donate.png";
-            case Types.Inventory.Enumerations.OutflowsTypes.Fraude:
+            case Types.Inventory.Enumerations.OutflowsTypes.Fraud:
                 return "./img/Products/outflows/criminal.png";
-            case Types.Inventory.Enumerations.OutflowsTypes.Venta:
+            case Types.Inventory.Enumerations.OutflowsTypes.Purchase:
                 return "./img/Products/outflows/shop.png";
-            case Types.Inventory.Enumerations.OutflowsTypes.Perdida:
+            case Types.Inventory.Enumerations.OutflowsTypes.Loss:
                 return "./img/Products/outflows/lost.png";
-            case Types.Inventory.Enumerations.OutflowsTypes.Caducidad:
+            case Types.Inventory.Enumerations.OutflowsTypes.Expiry:
                 return "./img/Products/outflows/expired.png";
             default:
                 return "./img/Products/packages.png";

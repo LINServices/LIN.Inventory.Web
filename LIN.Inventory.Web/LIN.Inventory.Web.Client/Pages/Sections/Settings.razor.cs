@@ -93,7 +93,7 @@ public partial class Settings
         if (InventoryContext == null)
             return;
 
-        Name = InventoryContext.Inventory.Nombre;
+        Name = InventoryContext.Inventory.Name;
         Description = InventoryContext.Inventory.Direction;
 
         // Rellena los datos
@@ -146,7 +146,7 @@ public partial class Settings
         if (InventoryContext == null || response.Response != Responses.Success)
             return;
 
-        InventoryContext.Inventory.Nombre = Name;
+        InventoryContext.Inventory.Name = Name;
         InventoryContext.Inventory.Direction = Description;
         StateHasChanged();
     }
@@ -161,7 +161,7 @@ public partial class Settings
         {
             var model = new InventoryAccessDataModel
             {
-                Inventario = int.Parse(Id),
+                InventoryId = int.Parse(Id),
                 ProfileId = e.Profile.Id,
                 Rol = InventoryRoles.Member
             };
