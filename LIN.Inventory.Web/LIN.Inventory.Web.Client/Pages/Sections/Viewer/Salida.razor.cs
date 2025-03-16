@@ -41,7 +41,7 @@ public partial class Salida
         if (inventoryContext == null)
         {
             // Obtener los detalles.
-            var outflowDetails = await Access.Inventory.Controllers.Outflows.Read(int.Parse(Id), Access.Inventory.Session.Instance.Token, true);
+            var outflowDetails = await Access.Inventory.Controllers.Outflows.Read(int.Parse(Id), Session.Instance.Token, true);
 
             // Validar respuesta.
             if (outflowDetails.Response == Responses.Success)
@@ -49,7 +49,6 @@ public partial class Salida
 
             return;
         }
-
 
         // Obtener la salida.
         var outflow = (from outflowModel in (inventoryContext.Outflows ?? new()).Models
