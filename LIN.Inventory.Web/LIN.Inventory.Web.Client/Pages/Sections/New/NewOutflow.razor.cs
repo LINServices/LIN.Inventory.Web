@@ -112,9 +112,10 @@ public partial class NewOutflow
             return;
         }
 
+       
 
-        // Variables
-        List<OutflowDetailsDataModel> details = new();
+            // Variables
+            List<OutflowDetailsDataModel> details = new();
         OutflowDataModel entry;
 
 
@@ -157,6 +158,27 @@ public partial class NewOutflow
             InventoryId = Contexto?.Inventory.Id ?? 0,
             ProfileId = Session.Instance.Information.Id
         };
+
+        if (IsFormClient)
+        { 
+
+            if (string.IsNullOrWhiteSpace(OutsiderDoc))
+            {
+                section = 2;
+                ErrorMessage = "El cliente debe tener un documento valido.";
+                StateHasChanged();
+            }
+
+            entry.Outsider = new()
+            {
+                Document = OutsiderDoc,
+                Name = OutsiderName
+            };
+        }
+        else
+        {
+            entry.Outsider = null;
+        }
 
 
         // Envía al servidor
@@ -212,6 +234,17 @@ public partial class NewOutflow
 
     }
 
+
+    string OutsiderName = string.Empty;
+    string OutsiderDoc = string.Empty;
+
+
+    bool IsFormClient = false;
+    void SelectClient(bool value)
+    {
+        IsFormClient = value;
+        StateHasChanged();
+    }
 
     void GoNormal()
     {

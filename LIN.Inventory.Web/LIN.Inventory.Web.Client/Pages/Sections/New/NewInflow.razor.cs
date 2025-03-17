@@ -102,7 +102,7 @@ public partial class NewInflow
         section = 3;
         StateHasChanged();
 
-        // Modelo.
+        // Model.
         InflowsTypes type = (InflowsTypes)Category;
 
         // No tiene tipo.

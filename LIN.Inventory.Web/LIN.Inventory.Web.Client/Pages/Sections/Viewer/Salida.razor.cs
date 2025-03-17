@@ -1,18 +1,10 @@
 ﻿using LIN.Inventory.Realtime.Manager.Models;
-using LIN.Inventory.Realtime.Manager;
-using LIN.Inventory.Web.Client.Layout;
+using LIN.Inventory.Shared;
 
 namespace LIN.Inventory.Web.Client.Pages.Sections.Viewer;
 
-
 public partial class Salida
 {
-
-
-
-
-    AlertPopup Alerta;
-
 
     /// <summary>
     /// Id de la entrada.
@@ -20,13 +12,42 @@ public partial class Salida
     [Parameter]
     public string Id { get; set; } = string.Empty;
 
-
+    /// <summary>
+    /// Modelo de la salida.
+    /// </summary>
+    private OutflowDataModel? Model { get; set; }
 
     /// <summary>
-    /// Modelo.
+    /// Establecer y obtener si se esta cargando aun información.
     /// </summary>
-    private OutflowDataModel? Modelo { get; set; } = new();
+    private bool IsLoading { get; set; } = true;
 
+    /// <summary>
+    /// Establecer y obtener si se esta cargando aun información.
+    /// </summary>
+    private bool HasError { get; set; } = true;
+
+    /// <summary>
+    /// Establecer y obtener el mensaje de error.
+    /// </summary>
+    private string ErrorMessage { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Popup de alerta.
+    /// </summary>
+    private AlertPopup? Alert { get; set; }
+
+    /// <summary>
+    /// Información del cajero.
+    /// </summary>
+    private AccountModel? Cashier { get; set; }
+
+    /// <summary>
+    /// Obtener la imagen de perfil del cajero.
+    /// </summary>
+    private string CashierPicture => string.IsNullOrWhiteSpace(Cashier?.Profile)
+                                     ? "./img/user.png"
+                                     : Cashier.Profile;
 
 
     /// <summary>
@@ -34,19 +55,36 @@ public partial class Salida
     /// </summary>
     protected override async Task OnParametersSetAsync()
     {
-      
+
+        HasError = false;
+        IsLoading = true;
+        StateHasChanged();
+
         InventoryContext? inventoryContext = InventoryManager.FindContextByOutflow(int.Parse(Id));
 
         // Validar.
-        if (inventoryContext == null)
+        if (inventoryContext is null)
         {
             // Obtener los detalles.
-            var outflowDetails = await Access.Inventory.Controllers.Outflows.Read(int.Parse(Id), Session.Instance.Token, true);
+            var (outflowDetails, cajero) = await Access.Inventory.Controllers.Outflows.Read(int.Parse(Id), Session.Instance.Token, Session.Instance.AccountToken, true);
 
+            if (cajero is not null && !AccountManager.Accounts.Exists(t => t.Id == cajero?.Id))
+            {
+                AccountManager.Accounts.Add(cajero);
+            }
+
+            Cashier = cajero;
             // Validar respuesta.
             if (outflowDetails.Response == Responses.Success)
-                Modelo = outflowDetails.Model;
+                Model = outflowDetails.Model;
+            else
+            {
+                ErrorMessage = "al cargar la información del movimiento.";
+                HasError = true;
+            }
 
+            IsLoading = false;
+            StateHasChanged();
             return;
         }
 
@@ -55,11 +93,20 @@ public partial class Salida
                        where outflowModel.Id == int.Parse(Id)
                        select outflowModel).FirstOrDefault();
 
+        // Obtener cajero.
+        Cashier = AccountManager.Accounts.FirstOrDefault(t => t.Id == outflow?.Profile?.AccountId);
+
         // Si no hay detalles.
         if (outflow?.Details.Count <= 0)
         {
             // Obtener los detalles.
-            var outflowDetails = await Access.Inventory.Controllers.Outflows.Read(outflow.Id, Session.Instance.Token, true);
+            var (outflowDetails, cajero) = await Access.Inventory.Controllers.Outflows.Read(outflow.Id, Session.Instance.Token, Session.Instance.AccountToken, true);
+
+            if (cajero is not null && !AccountManager.Accounts.Exists(t => t.Id == cajero?.Id))
+            {
+                AccountManager.Accounts.Add(cajero);
+                Cashier = cajero;
+            }
 
             if (outflowDetails.Response == Responses.Success)
             {
@@ -67,18 +114,25 @@ public partial class Salida
                 outflow.Inversion = outflowDetails.Model.Inversion;
                 outflow.Ganancia = outflowDetails.Model.Ganancia;
                 outflow.Utilidad = outflowDetails.Model.Utilidad;
+                outflow.Outsider = outflowDetails.Model.Outsider;
             }
             else if (outflowDetails.Response == Responses.Unauthorized)
             {
-                Alerta.Show("No tienes autorización para visualizar los movimientos.");
+                ErrorMessage = "no tienes autorización para ver este movimiento.";
+                HasError = true;
+            }
+            else
+            {
+                ErrorMessage = "al cargar la información del movimiento.";
+                HasError = true;
             }
         }
 
         // Establecer el modelo.
-        Modelo = outflow;
+        IsLoading = false;
+        Model = outflow;
         await base.OnParametersSetAsync();
     }
-
 
 
     /// <summary>
@@ -86,14 +140,12 @@ public partial class Salida
     /// </summary>
     protected override async Task OnInitializedAsync()
     {
-
         MainLayout.Configure(new()
         {
             OnCenterClick = Send,
             Section = 1,
             DockIcon = 2
         });
-
         await base.OnInitializedAsync();
     }
 
@@ -104,129 +156,45 @@ public partial class Salida
     void Send()
     {
         // Nuevo onInvoque.
-        MainLayout.DevicesSelector.OnInvoke = (e) =>
+        MainLayout.DevicesSelector.OnInvoke = (device) =>
         {
-            deviceManager.SendToDevice($"viewOutflow({Modelo?.Id})", e.Id);
+            deviceManager.SendToDevice($"viewOutflow({Model?.Id})", device.Id);
         };
 
         MainLayout.DevicesSelector.Show();
     }
 
 
-
-
-
-
+    /// <summary>
+    /// Abrir ventana con información de la salida.
+    /// </summary>
+    /// <param name="id">Id de la salida.</param>
     public static void Show(int id)
     {
         MainLayout.Navigate($"/outflow/{id}");
     }
 
 
-    bool edit = false;
-
-    void ControllerDate()
-    {
-        edit = !edit;
-        StateHasChanged();
-    }
-
-
     async void Update()
     {
-        var newdate = Modelo?.Date;
+        var newdate = Model?.Date;
 
-        await Access.Inventory.Controllers.Outflows.Update(Modelo.Id, newdate.Value, Session.Instance.Token);
-        edit = false;
+        await Access.Inventory.Controllers.Outflows.Update(Model.Id, newdate.Value, Session.Instance.Token);
         await InvokeAsync(StateHasChanged);
-    }
-
-
-
-    (string, string, string) GetGanancy()
-    {
-
-        string @base = "bg-money/20 dark:bg-green-100/20";
-        string Tittle = "text-money";
-        string svg = "fill-money";
-
-        if (Modelo == null)
-            return (@base, Tittle, svg);
-
-        if (Modelo.Ganancia < Modelo.Inversion)
-        {
-            @base = "bg-red-500/20 dark:bg-red-100/20";
-            Tittle = "text-red-500";
-            svg = "fill-red-500";
-        }
-
-        if (Modelo.Ganancia == Modelo.Inversion)
-        {
-            @base = "bg-orange-500/20 dark:bg-orange-100/20";
-            Tittle = "text-orange-500";
-            svg = "fill-orange-500";
-        }
-
-
-        return (@base, Tittle, svg);
-
-    }
-
-
-    (string, string, string) GetUtilities()
-    {
-
-
-
-        string @base = "bg-money/20 dark:bg-green-100/20";
-        string Tittle = "text-money";
-        string svg = "fill-money";
-
-        if (Modelo == null)
-            return (@base, Tittle, svg);
-
-        if (Modelo.Utilidad == 0)
-        {
-            @base = "bg-red-500/20 dark:bg-red-100/20";
-            Tittle = "text-red-500";
-            svg = "fill-red-500";
-        }
-
-        if (Modelo.Utilidad < 0)
-        {
-            @base = "bg-orange-500/20 dark:bg-orange-100/20";
-            Tittle = "text-orange-500";
-            svg = "fill-orange-500";
-        }
-
-
-        return (@base, Tittle, svg);
-
     }
 
     private string GetImage()
     {
-
-
-
-        switch (Modelo?.Type)
+        return (Model?.Type) switch
         {
-            case Types.Inventory.Enumerations.OutflowsTypes.Usage:
-                return "./img/Products/outflows/seller.png";
-            case Types.Inventory.Enumerations.OutflowsTypes.Contribution:
-                return "./img/Products/outflows/donate.png";
-            case Types.Inventory.Enumerations.OutflowsTypes.Fraud:
-                return "./img/Products/outflows/criminal.png";
-            case Types.Inventory.Enumerations.OutflowsTypes.Purchase:
-                return "./img/Products/outflows/shop.png";
-            case Types.Inventory.Enumerations.OutflowsTypes.Loss:
-                return "./img/Products/outflows/lost.png";
-            case Types.Inventory.Enumerations.OutflowsTypes.Expiry:
-                return "./img/Products/outflows/expired.png";
-            default:
-                return "./img/Products/packages.png";
-        }
-
+            Types.Inventory.Enumerations.OutflowsTypes.Usage => "./img/Products/outflows/seller.png",
+            Types.Inventory.Enumerations.OutflowsTypes.Contribution => "./img/Products/outflows/donate.png",
+            Types.Inventory.Enumerations.OutflowsTypes.Fraud => "./img/Products/outflows/criminal.png",
+            Types.Inventory.Enumerations.OutflowsTypes.Purchase => "./img/Products/outflows/shop.png",
+            Types.Inventory.Enumerations.OutflowsTypes.Loss => "./img/Products/outflows/lost.png",
+            Types.Inventory.Enumerations.OutflowsTypes.Expiry => "./img/Products/outflows/expired.png",
+            _ => "./img/Products/packages.png",
+        };
     }
 
 }

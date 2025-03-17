@@ -109,7 +109,7 @@ public class Scripts
     {
 
         // Producto.
-        var inflow = await LIN.Access.Inventory.Controllers.Inflows.Read((int)id, Session.Instance.Token, true);
+        var (inflow, _) = await LIN.Access.Inventory.Controllers.Inflows.Read((int)id, Session.Instance.Token, Session.Instance.AccountToken, true);
 
         if (inflow.Response != Responses.Success)
             return;
@@ -153,7 +153,7 @@ public class Scripts
     {
 
         // Producto.
-        var outflow = await LIN.Access.Inventory.Controllers.Outflows.Read((int)id, Session.Instance.Token, true);
+        var (outflow, _) = await LIN.Access.Inventory.Controllers.Outflows.Read((int)id, Session.Instance.Token, Session.Instance.AccountToken, true);
 
         if (outflow.Response != Responses.Success)
             return;
@@ -194,7 +194,7 @@ public class Scripts
     [SILFFunctionName("newInvitation")]
     private static async Task NewInvitation(IServiceProvider provider, decimal id)
     {
-        // Modelo.
+        // Model.
         var notification = await Access.Inventory.Controllers.InventoryAccess.ReadNotification((int)id, Session.Instance.Token);
 
 

@@ -1,6 +1,5 @@
 ﻿using LIN.Inventory.Realtime.Manager.Models;
-using LIN.Inventory.Realtime.Manager;
-using LIN.Inventory.Web.Client.Layout;
+using LIN.Inventory.Shared;
 
 namespace LIN.Inventory.Web.Client.Pages.Sections.Viewer;
 
@@ -27,6 +26,8 @@ public partial class Entrada
     private InflowDataModel? Modelo { get; set; } = new();
 
 
+    private AccountModel? Cajero { get; set; }
+
 
     protected override async Task OnParametersSetAsync()
     {
@@ -37,7 +38,13 @@ public partial class Entrada
         if (inventoryContext == null)
         {
             // Obtener los detalles.
-            var inflowDetails = await Access.Inventory.Controllers.Inflows.Read(int.Parse(Id), Access.Inventory.Session.Instance.Token, true);
+            var (inflowDetails, cajero) = await Access.Inventory.Controllers.Inflows.Read(int.Parse(Id), Access.Inventory.Session.Instance.Token, Session.Instance.AccountToken, true);
+
+            if (cajero is not null && !AccountManager.Accounts.Exists(t => t.Id == cajero?.Id))
+            {
+                AccountManager.Accounts.Add(cajero);
+                Cajero = cajero;
+            }
 
             // Validar respuesta.
             if (inflowDetails.Response == Responses.Success)
@@ -47,6 +54,10 @@ public partial class Entrada
 
 
             return;
+        }
+        else
+        {
+            Cajero = AccountManager.Accounts.FirstOrDefault(t => t.Id == Modelo?.Profile?.AccountId);
         }
 
 
@@ -59,7 +70,13 @@ public partial class Entrada
         if (inflow?.Details.Count <= 0)
         {
             // Obtener los detalles.
-            var inflowDetails = await Access.Inventory.Controllers.Inflows.Read(inflow.Id, Session.Instance.Token, true);
+            var (inflowDetails, cajero) = await Access.Inventory.Controllers.Inflows.Read(inflow.Id, Session.Instance.Token, Session.Instance.AccountToken, true);
+
+            if (cajero is not null && !AccountManager.Accounts.Exists(t => t.Id == cajero?.Id))
+            {
+                AccountManager.Accounts.Add(cajero);
+                Cajero = cajero;
+            }
 
             if (inflowDetails.Response == Responses.Success)
             {
@@ -72,6 +89,10 @@ public partial class Entrada
                 Alerta.Show("No tienes autorización para visualizar los movimientos.");
             }
 
+        }
+        else
+        {
+            Cajero = AccountManager.Accounts.FirstOrDefault(t => t.Id == Modelo?.Profile?.AccountId);
         }
 
         // Establecer el modelo.

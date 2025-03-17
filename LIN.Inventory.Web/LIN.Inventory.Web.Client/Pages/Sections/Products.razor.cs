@@ -150,7 +150,7 @@ public partial class Products : IInventoryModelObserver, IDisposable
     /// <summary>
     /// Abrir el producto.
     /// </summary>
-    /// <param name="e">Modelo.</param>
+    /// <param name="e">Model.</param>
     void Go(ProductModel e)
     {
         Selected = e;
