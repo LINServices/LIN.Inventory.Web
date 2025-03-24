@@ -74,6 +74,7 @@ public partial class Salida
             }
 
             Cashier = cajero;
+
             // Validar respuesta.
             if (outflowDetails.Response == Responses.Success)
                 Model = outflowDetails.Model;

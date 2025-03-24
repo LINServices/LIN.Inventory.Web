@@ -3,9 +3,32 @@ using LIN.Inventory.Shared;
 
 namespace LIN.Inventory.Web.Client.Pages.Sections.Viewer;
 
-
 public partial class Entrada
 {
+
+    /// <summary>
+    /// Establecer y obtener si se esta cargando aun información.
+    /// </summary>
+    private bool IsLoading { get; set; } = true;
+
+    /// <summary>
+    /// Establecer y obtener si se esta cargando aun información.
+    /// </summary>
+    private bool HasError { get; set; } = true;
+
+    /// <summary>
+    /// Obtener la imagen de perfil del cajero.
+    /// </summary>
+    private string CashierPicture => string.IsNullOrWhiteSpace(Cashier?.Profile)
+                                     ? "./img/user.png"
+                                     : Cashier.Profile;
+
+    /// <summary>
+    /// Establecer y obtener el mensaje de error.
+    /// </summary>
+    private string ErrorMessage { get; set; } = string.Empty;
+
+
 
 
     AlertPopup Alerta;
@@ -23,14 +46,18 @@ public partial class Entrada
     /// <summary>
     /// Modelo
     /// </summary>
-    private InflowDataModel? Modelo { get; set; } = new();
+    private InflowDataModel? Model { get; set; } = new();
 
 
-    private AccountModel? Cajero { get; set; }
+    private AccountModel? Cashier { get; set; }
 
 
     protected override async Task OnParametersSetAsync()
     {
+
+        HasError = false;
+        IsLoading = true;
+        StateHasChanged();
 
         InventoryContext? inventoryContext = InventoryManager.FindContextByInflow(int.Parse(Id));
 
@@ -43,21 +70,22 @@ public partial class Entrada
             if (cajero is not null && !AccountManager.Accounts.Exists(t => t.Id == cajero?.Id))
             {
                 AccountManager.Accounts.Add(cajero);
-                Cajero = cajero;
+                Cashier = cajero;
             }
 
             // Validar respuesta.
             if (inflowDetails.Response == Responses.Success)
             {
-                Modelo = inflowDetails.Model;
+                Model = inflowDetails.Model;
             }
 
-
+            IsLoading = false;
+            StateHasChanged();
             return;
         }
         else
         {
-            Cajero = AccountManager.Accounts.FirstOrDefault(t => t.Id == Modelo?.Profile?.AccountId);
+            Cashier = AccountManager.Accounts.FirstOrDefault(t => t.Id == Model?.Profile?.AccountId);
         }
 
 
@@ -75,7 +103,7 @@ public partial class Entrada
             if (cajero is not null && !AccountManager.Accounts.Exists(t => t.Id == cajero?.Id))
             {
                 AccountManager.Accounts.Add(cajero);
-                Cajero = cajero;
+                Cashier = cajero;
             }
 
             if (inflowDetails.Response == Responses.Success)
@@ -92,13 +120,12 @@ public partial class Entrada
         }
         else
         {
-            Cajero = AccountManager.Accounts.FirstOrDefault(t => t.Id == Modelo?.Profile?.AccountId);
+            Cashier = AccountManager.Accounts.FirstOrDefault(t => t.Id == Model?.Profile?.AccountId);
         }
 
         // Establecer el modelo.
-        Modelo = inflow;
-
-
+        IsLoading = false;
+        Model = inflow;
 
         await base.OnParametersSetAsync();
 
@@ -130,7 +157,7 @@ public partial class Entrada
         // Nuevo onInvoque.
         MainLayout.DevicesSelector.OnInvoke = (e) =>
         {
-            deviceManager.SendToDevice($"viewInflow({Modelo?.Id})", e.Id);
+            deviceManager.SendToDevice($"viewInflow({Model?.Id})", e.Id);
         };
 
         MainLayout.DevicesSelector.Show();
@@ -155,43 +182,14 @@ public partial class Entrada
 
     async void Update()
     {
-        var newdate = Modelo?.Date;
+        var newdate = Model?.Date;
 
-        await Access.Inventory.Controllers.Inflows.Update(Modelo.Id, newdate.Value, Session.Instance.Token);
+        await Access.Inventory.Controllers.Inflows.Update(Model.Id, newdate.Value, Session.Instance.Token);
         edit = false;
         await InvokeAsync(StateHasChanged);
     }
 
 
-    (string, string, string) GetPrevision()
-    {
-
-        string @base = "bg-money/20 dark:bg-green-100/20";
-        string Tittle = "text-money";
-        string svg = "fill-money";
-
-        if (Modelo == null)
-            return (@base, Tittle, svg);
-
-
-        if (Modelo.Prevision < 0)
-        {
-            @base = "bg-red-500/20 dark:bg-red-100/20";
-            Tittle = "text-red-500";
-            svg = "fill-red-500";
-        }
-
-        if (Modelo.Prevision == 0)
-        {
-            @base = "bg-orange-500/20 dark:bg-orange-100/20";
-            Tittle = "text-orange-500";
-            svg = "fill-orange-500";
-        }
-
-
-        return (@base, Tittle, svg);
-
-    }
 
 
     private string GetImage()
@@ -199,7 +197,7 @@ public partial class Entrada
 
 
 
-        switch (Modelo?.Type)
+        switch (Model?.Type)
         {
             case Types.Inventory.Enumerations.InflowsTypes.Purchase:
                 return "./img/Products/inflows/cart.png";
