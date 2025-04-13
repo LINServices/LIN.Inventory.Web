@@ -15,8 +15,15 @@ public partial class OpenStore
 
     protected override async Task OnParametersSetAsync()
     {
+
+
+        // Obtener el contexto.
+        var contexto = InventoryManager.Get(int.Parse(Id));
+
         // Obtener la información de OpenStore.
         var ss = await Access.Inventory.Controllers.OpenStore.ReadSettings(Session.Instance.Token, int.Parse(Id));
+
+        contexto.Inventory.OpenStoreSettings = ss.Model;
 
         if (ss.Response == Responses.NotRows)
         {

@@ -1,10 +1,25 @@
 ﻿using LIN.Access.Inventory.Controllers;
 using LIN.Inventory.Realtime.Manager.Models;
+using SILF.Script.Elements;
 
 namespace LIN.Inventory.Web.Client.Pages.Sections;
 
 public partial class Settings
 {
+
+
+    string user = string.Empty;
+    string password = string.Empty;
+    string tokenMercado = string.Empty;
+
+    bool Mode = false;
+
+    /// <summary>
+    /// Contexto del inventario.
+    /// </summary>
+    OpenStoreSettings SettingsA { get; set; } = new();
+
+
 
 
     /// <summary>
@@ -126,6 +141,28 @@ public partial class Settings
         Response = response;
         StateHasChanged();
 
+
+        // Obtener la información de OpenStore.
+        var ss = await Access.Inventory.Controllers.OpenStore.ReadSettings(Session.Instance.Token, int.Parse(Id));
+
+        InventoryContext.Inventory.OpenStoreSettings = ss.Model;
+
+        if (ss.Response == Responses.NotRows)
+        {
+            Mode = true;
+        }
+        else if (ss.Response != Responses.Success)
+        {
+            Mode = false;
+        }
+        else
+        {
+            SettingsA = ss.Model;
+            Mode = false;
+        }
+
+        StateHasChanged();
+
     }
 
 
@@ -189,5 +226,12 @@ public partial class Settings
 
     }
 
+
+    async Task Create()
+    {
+
+        var create = await LIN.Access.Inventory.Controllers.OpenStore.CreateSettings(Session.Instance.Token, tokenMercado, int.Parse(Id), user, password);
+
+    }
 
 }
