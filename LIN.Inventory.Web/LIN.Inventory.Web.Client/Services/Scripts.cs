@@ -1,11 +1,9 @@
 ﻿using LIN.Inventory.Realtime.Manager;
 using LIN.Inventory.Realtime.Manager.Observers.Abstractions;
-using LIN.Inventory.Realtime.Script;
 using LIN.Inventory.Web.Client.Pages;
 using LIN.Inventory.Web.Client.Pages.Sections;
 using LIN.Inventory.Web.Client.Pages.Sections.Viewer;
 using SILF.Script.DotnetRun.Interop;
-using SILF.Script.Interfaces;
 
 namespace LIN.Inventory.Web.Client.Services;
 
