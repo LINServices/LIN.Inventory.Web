@@ -1,8 +1,9 @@
 ﻿using LIN.Inventory.Realtime.Manager.Models;
+using System.Threading.Tasks;
 
 namespace LIN.Inventory.Web.Client.Pages.Sections;
 
-public partial class Payments
+public partial class Holds
 {
 
     /// <summary>
@@ -20,12 +21,6 @@ public partial class Payments
 
 
 
-    /// <summary>
-    /// Producto seleccionado.
-    /// </summary>
-    public static ProductModel? Selected { get; set; } = null;
-
-
 
     /// <summary>
     /// Contexto del inventario.
@@ -37,7 +32,7 @@ public partial class Payments
     /// <summary>
     /// Respuesta.
     /// </summary>
-    private ReadAllResponse<Types.Payments.Models.PayModel>? Response { get; set; } = null;
+    private ReadAllResponse<HoldModel>? Response { get; set; } = null;
 
 
 
@@ -51,16 +46,16 @@ public partial class Payments
         Contexto = InventoryManager.Get(int.Parse(Id));
 
         // Evaluar el contexto.
-        if (Contexto != null)
-            Response = Contexto.Payments;
-        else
-            Contexto = new()
-            {
-                Inventory = new()
-                {
-                    Id = int.Parse(Id),
-                }
-            };
+        //if (Contexto != null)
+        //    Response = Contexto.Payments;
+        //else
+        //    Contexto = new()
+        //    {
+        //        Inventory = new()
+        //        {
+        //            Id = int.Parse(Id),
+        //        }
+        //    };
 
         GetData();
 
@@ -85,14 +80,14 @@ public partial class Payments
         StateHasChanged();
 
         // Obtiene los dispositivos
-        var result = await Access.Inventory.Controllers.OpenStore.Payments(Session.Instance.Token, Contexto?.Inventory.Id ?? 0);
+        var result = await Access.Inventory.Controllers.Holds.ReadAll(Contexto?.Inventory.Id ?? 0 ,Session.Instance.Token);
 
         // Nuevos estados.
         IsLoading = false;
         Response = result;
 
-        if (Contexto != null)
-            Contexto.Payments = Response;
+        //if (Contexto != null)
+        //    Contexto.Payments = Response;
 
         StateHasChanged();
     }
@@ -129,17 +124,6 @@ public partial class Payments
 
 
 
-    /// <summary>
-    /// Abrir el producto.
-    /// </summary>
-    /// <param name="e">Model.</param>
-    void Go(ProductModel e)
-    {
-        Selected = e;
-        nav.NavigateTo("/product");
-    }
-
-
 
     /// <summary>
     /// Abrir la entradas.
@@ -164,9 +148,9 @@ public partial class Payments
     /// <summary>
     /// Abrir las salidas.
     /// </summary>
-    void GoHolds()
+    void GoSalidas()
     {
-        nav.NavigateTo($"/holds/{Contexto?.Inventory.Id}");
+        nav.NavigateTo($"/outflows/{Contexto?.Inventory.Id}");
     }
 
 
@@ -185,6 +169,19 @@ public partial class Payments
     void GoOpenStore()
     {
         nav.NavigateTo($"/openStore/{Contexto?.Inventory.Id}");
+    }
+
+
+    private async Task HoldBack(int id)
+    {
+     var response = await   LIN.Access.Inventory.Controllers.Holds.Return(id, LIN.Access.Inventory.Session.Instance.Token);
+
+        if (response.Response == Responses.Success)
+        {
+            Response.Models.RemoveAll(t => t.GroupId == id);
+            StateHasChanged();
+        }
+
     }
 
 
