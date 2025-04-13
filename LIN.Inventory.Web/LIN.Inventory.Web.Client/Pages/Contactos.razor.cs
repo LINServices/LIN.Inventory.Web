@@ -93,7 +93,7 @@ public partial class Contactos
     /// <summary>
     /// Abrir el contacto.
     /// </summary>
-    /// <param name="e">Modelo.</param>
+    /// <param name="e">Model.</param>
     private static void Go(ContactModel e)
     {
         MainLayout.ContactPop.Show(e);

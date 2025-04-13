@@ -1,7 +1,7 @@
 ﻿@page "/openStore/{Id}"
 @inject IInventoryManager InventoryManager
 
-@code{
+@code {
     [Parameter]
     public string Id { get; set; } = string.Empty;
 }
@@ -16,7 +16,6 @@
 
     @* Header. *@
     <div class="mt-1">
-
     </div>
 
 
@@ -24,60 +23,90 @@
     <div class="UIScroll mt-2 flex-1 gap-2 overflow-auto">
 
         <div class="grid grid-cols-1 px-4 xl:grid-cols-2 xl:gap-4">
-            <div class="mb-4 rounded-lg border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-800 sm:p-6 xl:mb-0">
+
+
+            <div class="mb-4 rounded-lg border border-zinc-200 bg-white p-4 shadow-sm sm:p-6 xl:mb-0 dark:border-zinc-700 dark:bg-zinc-800">
                 <div class="flow-root">
                     <h3 class="text-xl font-semibold dark:text-white">Configuración</h3>
                     <p class="text-sm font-normal text-zinc-500 dark:text-zinc-400">Activar o desactivar, la compatibilidad con la tienda Open Store</p>
-                 
+
                     <div class="mt-2 divide-y divide-zinc-200 dark:divide-zinc-700">
-                        <!-- Item 1 -->
-                        <div class="flex items-center justify-between py-4">
-                            <div class="flex flex-grow flex-col">
-                                <div class="text-lg font-semibold text-zinc-900 dark:text-white">Pagos en línea</div>
-                                <div class="text-base font-normal text-zinc-500 dark:text-zinc-400">Pagos usando la plataforma de Mercado Pago</div>
+
+                        @if (Mode)
+                        {
+                            <!-- Item 1 -->
+                            <div class="flex items-center justify-between py-4">
+                                <div class="flex flex-grow flex-col">
+                                    <div class="text-lg font-semibold text-zinc-900 dark:text-white">Activar Pagos</div>
+                                    <div class="text-base font-normal text-zinc-500 dark:text-zinc-400">Pagos usando la plataforma de Mercado Pago</div>
+
+                                    <input @bind="tokenMercado" type="text" id="zip-input" aria-describedby="helper-text-explanation" class="placeholder-gray-400 block w-full appearance-none rounded-md border border-gray-200 bg-gray-50 p-2 ps-10 text-gray-900 focus:border-current-500 focus:bg-white focus:outline-none focus:ring-current-500 sm:text-xs dark:bg-zinc-900 dark:border-zinc-700 dark:text-gray-100 focus:dark:bg-[#323232]" required placeholder="Token de acceso Mercado Pago">
+                                    <input @bind="user" type="text" id="zip-input" aria-describedby="helper-text-explanation" class="placeholder-gray-400 block w-full appearance-none rounded-md border border-gray-200 bg-gray-50 p-2 ps-10 text-gray-900 focus:border-current-500 focus:bg-white focus:outline-none focus:ring-current-500 sm:text-xs dark:bg-zinc-900 dark:border-zinc-700 dark:text-gray-100 focus:dark:bg-[#323232]" required placeholder="Usuario">
+                                    <input @bind="password" type="text" id="zip-input" aria-describedby="helper-text-explanation" class="placeholder-gray-400 block w-full appearance-none rounded-md border border-gray-200 bg-gray-50 p-2 ps-10 text-gray-900 focus:border-current-500 focus:bg-white focus:outline-none focus:ring-current-500 sm:text-xs dark:bg-zinc-900 dark:border-zinc-700 dark:text-gray-100 focus:dark:bg-[#323232]" required placeholder="Contraseña">
+
+                                    <button @onclick="Create">Crear</button>
+                                </div>
+                              
                             </div>
-                            <label class="inline-flex cursor-pointer items-center">
-                                <input type="checkbox" value="" class="peer sr-only">
-                                <div class="relative w-11 h-6 bg-zinc-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-current-300 dark:peer-focus:ring-current-800 rounded-full peer dark:bg-zinc-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-zinc-600 peer-checked:bg-current-600 dark:peer-checked:bg-current-600"></div>
-                            </label>
-                        </div>
-                        <!-- Item 2 -->
-                        <div class="flex items-center justify-between py-4">
-                            <div class="flex flex-grow flex-col">
-                                <div class="text-lg font-semibold text-zinc-900 dark:text-white">Vender productos sin stock</div>
-                                <div class="text-base font-normal text-zinc-500 dark:text-zinc-400">Permite vender productos sin stock</div>
+                        }
+                        else
+                        {
+                            <!-- Item 1 -->
+                            <div class="flex items-center justify-between py-4">
+                                <div class="flex flex-grow flex-col">
+                                    <div class="text-lg font-semibold text-zinc-900 dark:text-white">Pagos en línea</div>
+                                    <div class="text-base font-normal text-zinc-500 dark:text-zinc-400">Pagos usando la plataforma de Mercado Pago</div>
+                                </div>
+                                <label class="inline-flex cursor-pointer items-center">
+                                    <input type="checkbox" value="" class="peer sr-only" @bind="Settings.IsActive">
+                                    <div class="relative w-11 h-6 bg-zinc-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-current-300 dark:peer-focus:ring-current-800 rounded-full peer dark:bg-zinc-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-zinc-600 peer-checked:bg-current-600 dark:peer-checked:bg-current-600"></div>
+                                </label>
                             </div>
-                            <label class="inline-flex cursor-pointer items-center">
-                                <input type="checkbox" value="" class="peer sr-only">
-                                <div class="relative w-11 h-6 bg-zinc-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-current-300 dark:peer-focus:ring-current-800 rounded-full peer dark:bg-zinc-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-zinc-600 peer-checked:bg-current-600 dark:peer-checked:bg-current-600"></div>
-                            </label>
-                        </div>
-                        <!-- Item 3 -->
-                        <div class="flex items-center justify-between py-4">
-                            <div class="flex flex-grow flex-col">
-                                <div class="text-lg font-semibold text-zinc-900 dark:text-white">Reservar productos</div>
-                                <div class="text-base font-normal text-zinc-500 dark:text-zinc-400">Reservar los productos del stock mientras se genera el pago</div>
+                            <!-- Item 2 -->
+                            <div class="flex items-center justify-between py-4">
+                                <div class="flex flex-grow flex-col">
+                                    <div class="text-lg font-semibold text-zinc-900 dark:text-white">Vender productos sin stock</div>
+                                    <div class="text-base font-normal text-zinc-500 dark:text-zinc-400">Permite vender productos sin stock</div>
+                                </div>
+                                <label class="inline-flex cursor-pointer items-center">
+                                    <input type="checkbox" value="" class="peer sr-only">
+                                    <div class="relative w-11 h-6 bg-zinc-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-current-300 dark:peer-focus:ring-current-800 rounded-full peer dark:bg-zinc-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-zinc-600 peer-checked:bg-current-600 dark:peer-checked:bg-current-600"></div>
+                                </label>
                             </div>
-                            <label class="inline-flex cursor-pointer items-center">
-                                <input type="checkbox" value="" class="peer sr-only">
-                                <div class="relative w-11 h-6 bg-zinc-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-current-300 dark:peer-focus:ring-current-800 rounded-full peer dark:bg-zinc-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-zinc-600 peer-checked:bg-current-600 dark:peer-checked:bg-current-600"></div>
-                            </label>
-                        </div>
-                        <!-- Item 4 -->
-                        <div class="flex items-center justify-between pt-4">
-                            <div class="flex flex-grow flex-col">
-                                <div class="text-lg font-semibold text-zinc-900 dark:text-white">Devolver movimientos</div>
-                                <div class="text-base font-normal text-zinc-500 dark:text-zinc-400">Cambiar el estado de los movimientos según los estados de los pagos.</div>
+                            <!-- Item 3 -->
+                            <div class="flex items-center justify-between py-4">
+                                <div class="flex flex-grow flex-col">
+                                    <div class="text-lg font-semibold text-zinc-900 dark:text-white">Reservar productos</div>
+                                    <div class="text-base font-normal text-zinc-500 dark:text-zinc-400">Reservar los productos del stock mientras se genera el pago</div>
+                                </div>
+                                <label class="inline-flex cursor-pointer items-center">
+                                    <input type="checkbox" value="" class="peer sr-only">
+                                    <div class="relative w-11 h-6 bg-zinc-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-current-300 dark:peer-focus:ring-current-800 rounded-full peer dark:bg-zinc-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-zinc-600 peer-checked:bg-current-600 dark:peer-checked:bg-current-600"></div>
+                                </label>
                             </div>
-                            <label class="inline-flex cursor-pointer items-center">
-                                <input type="checkbox" value="" class="peer sr-only">
-                                <div class="relative w-11 h-6 bg-zinc-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-current-300 dark:peer-focus:ring-current-800 rounded-full peer dark:bg-zinc-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-zinc-600 peer-checked:bg-current-600 dark:peer-checked:bg-current-600"></div>
-                            </label>
-                        </div>
+                            <!-- Item 4 -->
+                            <div class="flex items-center justify-between pt-4">
+                                <div class="flex flex-grow flex-col">
+                                    <div class="text-lg font-semibold text-zinc-900 dark:text-white">Devolver movimientos</div>
+                                    <div class="text-base font-normal text-zinc-500 dark:text-zinc-400">Cambiar el estado de los movimientos según los estados de los pagos.</div>
+                                </div>
+                                <label class="inline-flex cursor-pointer items-center">
+                                    <input type="checkbox" value="" class="peer sr-only">
+                                    <div class="relative w-11 h-6 bg-zinc-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-current-300 dark:peer-focus:ring-current-800 rounded-full peer dark:bg-zinc-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-zinc-600 peer-checked:bg-current-600 dark:peer-checked:bg-current-600"></div>
+                                </label>
+                            </div>
+
+                        }
+
+
                     </div>
+
                 </div>
             </div>
-            <div class="mb-4 rounded-lg border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-800 sm:p-6 xl:mb-0">
+
+            @if (!Mode)
+            {
+               <div class="mb-4 rounded-lg border border-zinc-200 bg-white p-4 shadow-sm sm:p-6 xl:mb-0 dark:border-zinc-700 dark:bg-zinc-800">
                 <div class="flow-root">
                     <h3 class="text-xl font-semibold dark:text-white">Notificaciones</h3>
                     <p class="text-sm font-normal text-zinc-500 dark:text-zinc-400">Recibir al final del dia un resumen de las ventas</p>
@@ -129,8 +158,10 @@
                     </div>
                 </div>
             </div>
-        </div>
       
+            }
+               </div>
+
     </div>
 
 </div>

@@ -138,7 +138,7 @@ public partial class Entradas : IInflowModelObserver, IDisposable
     /// <summary>
     /// Ir a una entrada.
     /// </summary>
-    /// <param name="e">Modelo de la entrada.</param>
+    /// <param name="e">Model de la entrada.</param>
     void Go(Types.Inventory.Models.InflowDataModel e)
     {
         Selected = e;

@@ -7,6 +7,10 @@ function forceClick(id) {
     control.click();
 }
 
+function cleanChart() {
+    document.getElementById("area-chart").innerHTML = "";
+}
+
 function loadChart(dates, numbers) {
     let options = {
         chart: {

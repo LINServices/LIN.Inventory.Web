@@ -137,7 +137,7 @@ public partial class Home : IDisposable, INotificationModelObserver
     /// <summary>
     /// Agregar modelo de notificación.
     /// </summary>
-    /// <param name="modelo">Modelo.</param>
+    /// <param name="modelo">Model.</param>
     public void Add(Notificacion modelo)
     {
         InvokeAsync(() =>

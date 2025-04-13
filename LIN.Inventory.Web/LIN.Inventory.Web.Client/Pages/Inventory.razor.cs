@@ -73,7 +73,7 @@ public partial class Inventory
     /// <summary>
     /// Abrir un producto.
     /// </summary>
-    /// <param name="e">Modelo.</param>
+    /// <param name="e">Model.</param>
     private void Go(InventoryDataModel? e)
     {
         if (e == null)
@@ -124,7 +124,7 @@ public partial class Inventory
     /// <summary>
     /// Agregar modelo.
     /// </summary>
-    /// <param name="model">Modelo de inventario.</param>
+    /// <param name="model">Model de inventario.</param>
     public  void AddData(InventoryDataModel model)
     {
         if (Response?.Response != Responses.Success)

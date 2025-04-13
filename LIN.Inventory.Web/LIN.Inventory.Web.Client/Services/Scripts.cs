@@ -109,7 +109,7 @@ public class Scripts
     {
 
         // Producto.
-        var inflow = await LIN.Access.Inventory.Controllers.Inflows.Read((int)id, Session.Instance.Token, true);
+        var (inflow, _) = await LIN.Access.Inventory.Controllers.Inflows.Read((int)id, Session.Instance.Token, Session.Instance.AccountToken, true);
 
         if (inflow.Response != Responses.Success)
             return;
@@ -127,16 +127,19 @@ public class Scripts
         if (context.Inflows != null && context.Inflows.Response == Responses.Success)
             context.Inflows.Models.Insert(0, inflow.Model);
 
-        // Actualizar la cantidad.
-        foreach (var item in inflow.Model.Details)
+        if (inflow.Model.IsAccepted)
         {
-            // Detalle.
-            var product = context.Products?.Models.Where(t => t.DetailModel?.Id == item.ProductDetailId).FirstOrDefault();
-
             // Actualizar la cantidad.
-            if (product != null && product.DetailModel != null)
-                product.DetailModel.Quantity += item.Quantity;
+            foreach (var item in inflow.Model.Details)
+            {
+                // Detalle.
+                var product = context.Products?.Models.Where(t => t.DetailModel?.Id == item.ProductDetailId).FirstOrDefault();
 
+                // Actualizar la cantidad.
+                if (product != null && product.DetailModel != null)
+                    product.DetailModel.Quantity += item.Quantity;
+
+            }
         }
 
         inflow.Model.CountDetails = inflow.Model.Details.Count;
@@ -153,7 +156,7 @@ public class Scripts
     {
 
         // Producto.
-        var outflow = await LIN.Access.Inventory.Controllers.Outflows.Read((int)id, Session.Instance.Token, true);
+        var (outflow, _) = await LIN.Access.Inventory.Controllers.Outflows.Read((int)id, Session.Instance.Token, Session.Instance.AccountToken, true);
 
         if (outflow.Response != Responses.Success)
             return;
@@ -194,7 +197,7 @@ public class Scripts
     [SILFFunctionName("newInvitation")]
     private static async Task NewInvitation(IServiceProvider provider, decimal id)
     {
-        // Modelo.
+        // Model.
         var notification = await Access.Inventory.Controllers.InventoryAccess.ReadNotification((int)id, Session.Instance.Token);
 
 

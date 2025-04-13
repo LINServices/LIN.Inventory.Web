@@ -1,4 +1,5 @@
 ﻿using LIN.Inventory.Realtime.Manager.Models;
+using QRCoder;
 
 namespace LIN.Inventory.Web.Client.Pages.Sections.New;
 
@@ -11,6 +12,8 @@ public partial class NewOutflow
     /// </summary>
     [Parameter]
     public string Id { get; set; } = string.Empty;
+
+    public ClientsDrawer ClientDrawer { get; set; }
 
 
 
@@ -90,11 +93,12 @@ public partial class NewOutflow
 
     string ErrorMessage = "";
 
-
+    string qr = "";
+    string qrText = "";
     /// <summary>
     /// Crear.
     /// </summary>
-    private async void Create()
+    private async void Create(bool isOnline = false)
     {
 
         // Preparar la vista.
@@ -111,6 +115,7 @@ public partial class NewOutflow
             StateHasChanged();
             return;
         }
+
 
 
         // Variables
@@ -158,15 +163,52 @@ public partial class NewOutflow
             ProfileId = Session.Instance.Information.Id
         };
 
+        if (IsFormClient)
+        {
+
+            if (string.IsNullOrWhiteSpace(OutsiderDoc))
+            {
+                section = 2;
+                ErrorMessage = "El cliente debe tener un documento valido.";
+                StateHasChanged();
+            }
+
+            entry.Outsider = new()
+            {
+                Document = OutsiderDoc,
+                Name = OutsiderName,
+                Email = OutsiderMail
+            };
+        }
+        else
+        {
+            entry.Outsider = null;
+        }
+
+        CreateResponse response;
 
         // Envía al servidor
-        var response = await Access.Inventory.Controllers.Outflows.Create(entry, Access.Inventory.Session.Instance.Token);
+        if (isOnline)
+        {
+            response = await Access.Inventory.Controllers.OpenStore.CreateOnline(entry, Access.Inventory.Session.Instance.Token);
+            qr = GetQr(response.LastUnique);
+            qrText = response.LastUnique;
+        }
+        else
+        {
+            response = await Access.Inventory.Controllers.Outflows.Create(entry, Access.Inventory.Session.Instance.Token);
+        }
 
+
+        int backSection = 0;
 
         switch (response.Response)
         {
 
             case Responses.Success:
+                {
+                    if (isOnline) backSection = 4;
+                }
                 break;
 
             case Responses.Unauthorized:
@@ -189,7 +231,7 @@ public partial class NewOutflow
         StateHasChanged();
 
         await Task.Delay(2000);
-        section = 0;
+        section = backSection;
         StateHasChanged();
 
     }
@@ -213,6 +255,18 @@ public partial class NewOutflow
     }
 
 
+    string OutsiderName = string.Empty;
+    string OutsiderMail = string.Empty;
+    string OutsiderDoc = string.Empty;
+
+
+    bool IsFormClient = false;
+    void SelectClient(bool value)
+    {
+        IsFormClient = value;
+        StateHasChanged();
+    }
+
     void GoNormal()
     {
         section = 0;
@@ -230,4 +284,31 @@ public partial class NewOutflow
 
     }
 
+    void ShowClient()
+    {
+        ClientDrawer.Show();
+    }
+
+    void SelectClient()
+    {
+        var client = ClientDrawer.Selected;
+
+        if (client is null)
+            return;
+
+        OutsiderName = client.Name;
+        OutsiderDoc = client.Document;
+        StateHasChanged();
+    }
+
+    string GetQr(string text)
+    {
+        using QRCodeGenerator qrGenerator = new();
+        using QRCodeData qrCodeData = qrGenerator.CreateQrCode(text, QRCodeGenerator.ECCLevel.Q);
+        using PngByteQRCode qrCode = new(qrCodeData);
+        byte[] qrCodeBytes = qrCode.GetGraphic(20);
+
+        string base64Qr = Convert.ToBase64String(qrCodeBytes);
+        return $"data:image/png;base64,{base64Qr}";
+    }
 }

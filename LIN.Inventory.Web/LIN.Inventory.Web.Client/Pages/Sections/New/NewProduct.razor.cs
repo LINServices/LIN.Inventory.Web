@@ -16,7 +16,7 @@ public partial class NewProduct
 
 
     /// <summary>
-    /// Modelo del producto.
+    /// Model del producto.
     /// </summary>
     public ProductModel Product { get; set; } = new()
     {

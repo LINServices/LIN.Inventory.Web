@@ -2,9 +2,8 @@
 
 namespace LIN.Inventory.Web.Client.Pages.Sections;
 
-public partial class Products : IInventoryModelObserver, IDisposable
+public partial class Payments
 {
-
 
     /// <summary>
     /// Id.
@@ -38,7 +37,7 @@ public partial class Products : IInventoryModelObserver, IDisposable
     /// <summary>
     /// Respuesta.
     /// </summary>
-    private ReadAllResponse<ProductModel>? Response { get; set; } = null;
+    private ReadAllResponse<Types.Payments.Models.PayModel>? Response { get; set; } = null;
 
 
 
@@ -51,25 +50,7 @@ public partial class Products : IInventoryModelObserver, IDisposable
         // Obtener el contexto.
         Contexto = InventoryManager.Get(int.Parse(Id));
 
-        // Evaluar el contexto.
-        if (Contexto != null)
-            Response = Contexto.Products;
-        else
-            Contexto = new()
-            {
-                Inventory = new()
-                {
-                    Id = int.Parse(Id),
-                }
-            };
-
-        // Evaluar la respuesta.
-        if (Response == null)
-            GetData();
-
-        InventoryObserver.Add(Contexto?.Inventory.Id ?? 0, this);
-
-        deviceManager.JoinInventory(int.Parse(Id));
+        GetData();
 
         // Base.
         base.OnParametersSet();
@@ -92,14 +73,11 @@ public partial class Products : IInventoryModelObserver, IDisposable
         StateHasChanged();
 
         // Obtiene los dispositivos
-        var result = await Access.Inventory.Controllers.Product.ReadAll(Contexto?.Inventory.Id ?? 0, Session.Instance.Token);
+        var result = await Access.Inventory.Controllers.OpenStore.Payments(Session.Instance.Token, Contexto?.Inventory.Id ?? 0);
 
         // Nuevos estados.
         IsLoading = false;
         Response = result;
-
-        if (Contexto != null)
-            Contexto.Products = Response;
 
         StateHasChanged();
     }
@@ -113,19 +91,8 @@ public partial class Products : IInventoryModelObserver, IDisposable
     {
         InvokeAsync(() =>
         {
-            Response = Contexto?.Products;
             StateHasChanged();
         });
-    }
-
-
-
-    /// <summary>
-    /// Evento Dispose.
-    /// </summary>
-    public void Dispose()
-    {
-        InventoryObserver.Remove(this);
     }
 
 
@@ -203,12 +170,6 @@ public partial class Products : IInventoryModelObserver, IDisposable
     void GoOpenStore()
     {
         nav.NavigateTo($"/openStore/{Contexto?.Inventory.Id}");
-    }
-
-
-    void GoPyments()
-    {
-        nav.NavigateTo($"/payments/{Contexto?.Inventory.Id}");
     }
 
 
