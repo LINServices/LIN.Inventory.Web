@@ -1,6 +1,18 @@
 ﻿function backLast() {
     history.back();
 }
+
+function showToast(id) {
+    const toastEl = document.getElementById(id);
+    toastEl.classList.remove('hidden');
+    toastEl.classList.add('flex');
+
+    setTimeout(() => {
+        toastEl.classList.add('hidden');
+        toastEl.classList.remove('flex');
+    }, 5000);
+}
+
 function forceClick(id) {
 
     const control = document.getElementById(id);

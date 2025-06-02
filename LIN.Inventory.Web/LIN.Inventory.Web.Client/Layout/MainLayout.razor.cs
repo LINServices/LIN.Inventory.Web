@@ -37,6 +37,14 @@ public partial class MainLayout
     public static ContactPopup ContactPop { get; set; } = null!;
 
 
+
+    /// <summary>
+    /// Errores.
+    /// </summary>
+    public ErrorToast ErrorManager { get;set; } = null!;
+
+
+
     public static MainLayout e = null!;
 
 
@@ -67,6 +75,11 @@ public partial class MainLayout
         Settings.OnCenterClick = action;
 
 
+    }
+
+    public static void ShowError(string message)
+    {
+        e.ErrorManager.ShowErrorToast(message);
     }
 
 

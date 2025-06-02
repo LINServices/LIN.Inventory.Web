@@ -107,12 +107,18 @@ public partial class Holds
     /// <param name="id">Id del grupo de reserva.</param>
     private async Task HoldBack(int id)
     {
-        var response = await Access.Inventory.Controllers.Holds.Return(id,  Session.Instance.Token);
+        var response = await Access.Inventory.Controllers.Holds.Return(id, Session.Instance.Token);
 
         if (response.Response == Responses.Success)
         {
             Response?.Models.RemoveAll(t => t.GroupId == id);
             StateHasChanged();
+        }
+        else
+        {
+            if (response.Errors == null || !response.Errors.Any())
+                return;
+            MainLayout.ShowError(response.Errors.FirstOrDefault()!.Description);
         }
     }
 
