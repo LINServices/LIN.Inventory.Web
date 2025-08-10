@@ -1,5 +1,6 @@
 ﻿using LIN.Inventory.Realtime.Manager.Models;
 using LIN.Inventory.Shared;
+using LIN.Types.Cloud.Identity.Models.Identities;
 
 namespace LIN.Inventory.Web.Client.Pages.Sections.Viewer;
 

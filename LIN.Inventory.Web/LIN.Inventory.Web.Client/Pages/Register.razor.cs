@@ -1,4 +1,6 @@
-﻿namespace LIN.Inventory.Web.Client.Pages;
+﻿using LIN.Types.Cloud.Identity.Models.Identities;
+
+namespace LIN.Inventory.Web.Client.Pages;
 
 
 public partial class Register
