@@ -205,4 +205,11 @@ public partial class Salida
         ToastService.ShowWarningAsync("Todavía no puedes usar esta función, pero no falta mucho 😉");
     }
 
+    private string GetImage(string image)
+    {
+        return string.IsNullOrWhiteSpace(image)
+            ? "./img/Products/packages.png"
+            : "https://api.linplatform.com/bucket/PublicFiles/" + image + ".png";
+    }
+
 }

@@ -3,18 +3,10 @@ using LIN.Inventory.Shared.Controls;
 
 namespace LIN.Inventory.Web.Client.Pages.Sections.New;
 
-
 public partial class NewProduct
 {
-
-
-    /// <summary>
-    /// Id.
-    /// </summary>
     [Parameter]
     public string Id { get; set; } = string.Empty;
-
-
 
     /// <summary>
     /// Model del producto.
@@ -24,51 +16,32 @@ public partial class NewProduct
         Details = [new()]
     };
 
-
-
-    /// <summary>
-    /// Imagen.
-    /// </summary>
-    public byte[] Photo { get; set; } = [];
-
-
-
     /// <summary>
     /// Categoría.
     /// </summary>
     public int Category { get; set; }
-
-
 
     /// <summary>
     /// Sección actual.
     /// </summary>
     private int Section { get; set; }
 
-
-
     /// <summary>
     /// Contexto del inventario.
     /// </summary>
     private InventoryContext? Contexto { get; set; }
-
-
 
     /// <summary>
     /// Evento al establecer los parámetros.
     /// </summary>
     protected override void OnParametersSet()
     {
-
         // Obtener el contexto.
         Contexto = InventoryManager.Get(int.Parse(Id));
 
         // Base.
         base.OnParametersSet();
     }
-
-
-    string ErrorMessage = "";
 
     /// <summary>
     /// Crear.
@@ -81,14 +54,14 @@ public partial class NewProduct
             StateHasChanged();
 
             //Product.Provider = 1;
-            Product.InventoryId = Contexto?.Inventory.Id ?? 0;
+            Product.InventoryId = Contexto?.Inventory?.Id ?? 0;
             Product.Category = (ProductCategories)Category;
             Product.Statement = ProductBaseStatements.Normal;
 
             Product.Image = await SaveImage();
 
             // Respuesta del controlador
-            var response = await Access.Inventory.Controllers.Product.Create(Product, Access.Inventory.Session.Instance.Token);
+            var response = await Access.Inventory.Controllers.Product.Create(Product, Session.Instance.Token);
 
             switch (response.Response)
             {
@@ -97,13 +70,11 @@ public partial class NewProduct
 
                 case Responses.Unauthorized:
                     Section = 2;
-                    ErrorMessage = "No tienes autorización para crear productos en este inventario.";
                     StateHasChanged();
                     return;
 
                 default:
                     Section = 2;
-                    ErrorMessage = "Hubo un error al crear este producto.";
                     StateHasChanged();
                     return;
             }
@@ -121,16 +92,6 @@ public partial class NewProduct
         }
 
     }
-
-
-
-    void GoNormal()
-    {
-        Section = 0;
-        StateHasChanged();
-    }
-
-
 
     private ImageUploader? uploader;
 

@@ -1,12 +1,10 @@
-﻿using System.Reflection;
+﻿using LIN.Inventory.Shared.Controls;
 
 namespace LIN.Inventory.Web.Client.Pages.Sections.Edits;
 
 
 public partial class EditProduct
 {
-
-
     /// <summary>
     /// Id del producto.
     /// </summary>
@@ -29,39 +27,35 @@ public partial class EditProduct
     };
 
 
-
-    /// <summary>
-    /// Imagen.
-    /// </summary>
-    public string Photo { get; set; } = string.Empty;
-
-
-    string ErrorMessage = "";
+    private string ErrorMessage = "";
 
 
 
-    bool isNewPhoto = false;
+    private bool isNewPhoto = false;
 
-    async void OpenImage()
+    private async void OpenImage()
     {
-      //  Photo =  await Services.File.Open();
+        //  Photo =  await Services.File.Open();
         isNewPhoto = true;
         StateHasChanged();
     }
 
 
-    async void SetImage(string photo)
+    private async void SetImage(string photo)
     {
+        previewUrl = photo.Length <= 0
+            ? null
+            : "https://api.linplatform.com/bucket/PublicFiles/" + photo + ".png";
 
-        Photo = photo;
         isNewPhoto = false;
         StateHasChanged();
     }
 
 
-    async void DeleteImage()
+    private async void DeleteImage()
     {
-        Photo = string.Empty;
+        Image = [];
+        previewUrl = null;
         isNewPhoto = true;
         StateHasChanged();
     }
@@ -169,14 +163,12 @@ public partial class EditProduct
             if (!isNewPhoto)
                 Product.Image = null!;
             else
-                Product.Image = Photo;
+                Product.Image = await SaveImage();
 
             // Respuesta del controlador
-            var response = await Access.Inventory.Controllers.Product.Update(Product, Access.Inventory.Session.Instance.Token);
+            var response = await Access.Inventory.Controllers.Product.Update(Product, Session.Instance.Token);
 
-            Product.Image = Photo;
             Product.Details = ProductBase.Details;
-
 
             switch (response.Response)
             {
@@ -228,7 +220,7 @@ public partial class EditProduct
 
 
 
-    void GoNormal()
+    private void GoNormal()
     {
         Section = 0;
         StateHasChanged();
@@ -236,7 +228,7 @@ public partial class EditProduct
 
 
 
-    bool NeedUpdateDetail()
+    private bool NeedUpdateDetail()
     {
 
         try
@@ -270,5 +262,56 @@ public partial class EditProduct
     }
 
 
+
+    private GenericFilePicker? filePicker;
+    private string? previewUrl;
+    private string? fileName;
+
+    private async Task SelectFile()
+    {
+        if (filePicker is null) return;
+
+        await filePicker.OpenAsync();
+
+    }
+
+    private byte[] Image = Array.Empty<byte>();
+
+    private async Task OnSelectedPicture()
+    {
+
+        var fileBytes = filePicker.GetFile();
+        fileName = filePicker.GetFileName();
+
+        if (fileBytes != null)
+        {
+            isNewPhoto = true;
+            Image = fileBytes;
+            var base64 = Convert.ToBase64String(fileBytes);
+            previewUrl = $"data:image/png;base64,{base64}";
+        }
+    }
+
+
+    private async Task<string> SaveImage()
+    {
+        if (Image == null || Image.Length <= 0)
+        {
+            // manejar: no hay imagen
+            return string.Empty;
+        }
+
+        using var memoryStream = new MemoryStream(Image);
+
+        var response = await Client.Upload(memoryStream, "inventory", (e) => { }, filePublic: true);
+
+        if (response.Response != Responses.Success)
+        {
+            // manejar error de subida
+            return string.Empty;
+        }
+
+        return response.Model.PublicPath;
+    }
 
 }
