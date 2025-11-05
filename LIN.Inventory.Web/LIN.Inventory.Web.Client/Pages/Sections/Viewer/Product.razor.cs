@@ -150,15 +150,9 @@ public partial class Product
 
     private string GetImage()
     {
-
-        if (Modelo?.Image.Length <= 0)
-        {
-            return "./img/Products/packages.png";
-        }
-
-        return Modelo?.Image;
-
-
+        return Modelo?.Image.Length <= 0
+            ? "./img/Products/packages.png"
+            : "https://api.linplatform.com/bucket/PublicFiles/" + Modelo?.Image +  ".png";
     }
 
 }

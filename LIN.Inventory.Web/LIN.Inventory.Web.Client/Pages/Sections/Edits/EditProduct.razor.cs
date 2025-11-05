@@ -1,4 +1,6 @@
-﻿namespace LIN.Inventory.Web.Client.Pages.Sections.Edits;
+﻿using System.Reflection;
+
+namespace LIN.Inventory.Web.Client.Pages.Sections.Edits;
 
 
 public partial class EditProduct
@@ -259,6 +261,13 @@ public partial class EditProduct
 
     }
 
+
+    private string GetImage()
+    {
+        return ProductBase?.Image.Length <= 0
+            ? "./img/Products/packages.png"
+            : "https://api.linplatform.com/bucket/PublicFiles/" + ProductBase?.Image + ".png";
+    }
 
 
 

@@ -1,7 +1,9 @@
 using LIN.Inventory.Realtime.Extensions;
 using LIN.Inventory.Shared.Interfaces;
+using LIN.Inventory.Shared.Services;
 using LIN.Inventory.Web.Client.Services;
 using LIN.Inventory.Web.Components;
+using LIN.Cloud.SDK;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,8 @@ builder.Services.AddRazorComponents().AddInteractiveWebAssemblyComponents();
 builder.Services.AddRealTime();
 builder.Services.AddSingleton<IDeviceSelector, DeviceSelector>();
 builder.Services.AddSingleton<IOpenFiles, LIN.Inventory.Web.Client.Services.File>();
+builder.Services.AddSingleton<ToastService>();
+builder.Services.AddCloudSDK("key.e27vRz6166SbhnuLVuUM8ZFI91UXzKm");
 
 // Aplicación.
 var app = builder.Build();

@@ -13,17 +13,21 @@ global using LIN.Types.Inventory.Transient;
 global using LIN.Types.Responses;
 global using Microsoft.AspNetCore.Components;
 using LIN.Access.Auth;
+using LIN.Cloud.SDK;
 using LIN.Inventory.Realtime.Extensions;
 using LIN.Inventory.Shared.Interfaces;
+using LIN.Inventory.Shared.Services;
 using LIN.Inventory.Web.Client.Services;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
+builder.Services.AddSingleton<ToastService>();
 builder.Services.AddSingleton<IDeviceSelector, DeviceSelector>();
 builder.Services.AddSingleton<IOpenFiles, LIN.Inventory.Web.Client.Services.File>();
 builder.Services.AddAuthenticationService();
 builder.Services.AddRealTime();
+builder.Services.AddCloudSDK("key.e27vRz6166SbhnuLVuUM8ZFI91UXzKm");
 
 builder.Services.AddInventoryService();
 LIN.Access.Search.Build.Init();

@@ -214,4 +214,10 @@ public partial class Entrada
 
     }
 
+
+    private void ShowUndefined()
+    {
+        ToastService.ShowWarningAsync("Todavía no puedes usar esta función, pero no falta mucho 😉");
+    }
+
 }

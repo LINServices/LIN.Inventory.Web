@@ -1,5 +1,6 @@
 ﻿using LIN.Inventory.Realtime.Manager.Models;
 using LIN.Inventory.Shared;
+using LIN.Inventory.Shared.Services;
 using LIN.Types.Cloud.Identity.Models.Identities;
 
 namespace LIN.Inventory.Web.Client.Pages.Sections.Viewer;
@@ -197,6 +198,11 @@ public partial class Salida
             Types.Inventory.Enumerations.OutflowsTypes.Expiry => "./img/Products/outflows/expired.png",
             _ => "./img/Products/packages.png",
         };
+    }
+
+    private void ShowUndefined()
+    {
+        ToastService.ShowWarningAsync("Todavía no puedes usar esta función, pero no falta mucho 😉");
     }
 
 }

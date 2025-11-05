@@ -149,7 +149,9 @@ public partial class Register
         }
         else
         {
-            await ShowError($"Su cuenta fue creada, pero hubo un error al iniciar sesión");
+
+          await  ToastService.ShowAsync("Su cuenta fue creada correctamente");
+            await Task.Delay(1000);
             nav.NavigateTo("/");
             return;
         }

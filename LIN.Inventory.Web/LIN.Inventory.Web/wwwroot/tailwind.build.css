@@ -1498,6 +1498,20 @@ video {
   transform: none;
 }
 
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.1s ease-in-out forwards;
+}
+
 @keyframes pulse {
   50% {
     opacity: .5;
@@ -2026,6 +2040,12 @@ video {
   --tw-space-y-reverse: 0;
   margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
+}
+
+.space-y-3 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.75rem * var(--tw-space-y-reverse));
 }
 
 .space-y-4 > :not([hidden]) ~ :not([hidden]) {
@@ -2933,6 +2953,10 @@ video {
   fill: #fbbf24;
 }
 
+.fill-blue-500 {
+  fill: #3b82f6;
+}
+
 .fill-current-500 {
   fill: #6e964c;
 }
@@ -2971,10 +2995,6 @@ video {
 
 .fill-white {
   fill: #fff;
-}
-
-.fill-zinc-400 {
-  fill: #a1a1aa;
 }
 
 .fill-zinc-500 {
@@ -3190,6 +3210,10 @@ video {
 
 .ps-3\.5 {
   padding-inline-start: 0.875rem;
+}
+
+.ps-4 {
+  padding-inline-start: 1rem;
 }
 
 .pt-2 {
@@ -4258,6 +4282,11 @@ video {
 .hover\:text-gray-900:hover {
   --tw-text-opacity: 1;
   color: rgb(17 24 39 / var(--tw-text-opacity, 1));
+}
+
+.hover\:text-red-500:hover {
+  --tw-text-opacity: 1;
+  color: rgb(239 68 68 / var(--tw-text-opacity, 1));
 }
 
 .hover\:text-slate-100:hover {

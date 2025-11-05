@@ -1,5 +1,6 @@
 ﻿using LIN.Access.Inventory.Controllers;
 using LIN.Inventory.Realtime.Manager.Models;
+using LIN.Inventory.Shared.Services;
 
 namespace LIN.Inventory.Web.Client.Pages.Sections;
 
@@ -244,6 +245,11 @@ public partial class Settings
     {
         ResponseToken = null;
         StateHasChanged();
+    }
+
+    private void ShowUndefined()
+    {
+        ToastService.ShowWarningAsync("Parece que esta función aún no está lista, pero llegará muy pronto 🚀");
     }
 
 }

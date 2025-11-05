@@ -1,4 +1,11 @@
-﻿function backLast() {
+﻿window.fileUploadHelpers = {
+  triggerClick: function (elementId) {
+    const el = document.getElementById(elementId);
+    if (el) el.click();
+  }
+};
+
+function backLast() {
     history.back();
 }
 

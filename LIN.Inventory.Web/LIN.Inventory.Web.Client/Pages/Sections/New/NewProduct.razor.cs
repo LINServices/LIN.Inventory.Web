@@ -1,4 +1,5 @@
 ﻿using LIN.Inventory.Realtime.Manager.Models;
+using LIN.Inventory.Shared.Controls;
 
 namespace LIN.Inventory.Web.Client.Pages.Sections.New;
 
@@ -76,7 +77,6 @@ public partial class NewProduct
     {
         try
         {
-
             Section = 3;
             StateHasChanged();
 
@@ -84,15 +84,14 @@ public partial class NewProduct
             Product.InventoryId = Contexto?.Inventory.Id ?? 0;
             Product.Category = (ProductCategories)Category;
             Product.Statement = ProductBaseStatements.Normal;
-            //Product.Image = Photo;
+
+            Product.Image = await SaveImage();
 
             // Respuesta del controlador
             var response = await Access.Inventory.Controllers.Product.Create(Product, Access.Inventory.Session.Instance.Token);
 
-
             switch (response.Response)
             {
-
                 case Responses.Success:
                     break;
 
@@ -108,8 +107,6 @@ public partial class NewProduct
                     StateHasChanged();
                     return;
             }
-
-
 
             Section = 1;
             StateHasChanged();
@@ -135,5 +132,30 @@ public partial class NewProduct
 
 
 
+    private ImageUploader? uploader;
+
+    private async Task<string> SaveImage()
+    {
+        if (uploader?.ImageBytes == null)
+        {
+            // manejar: no hay imagen
+            return string.Empty;
+        }
+
+        // aquí tienes el byte[] listo para usar
+        byte[] imagen = uploader.ImageBytes;
+
+        using var memoryStream = new MemoryStream(imagen);
+
+        var response = await Client.Upload(memoryStream, "inventory", (e)=> { }, filePublic: true);
+
+        if (response.Response != Responses.Success)
+        {
+            // manejar error de subida
+            return string.Empty;
+        }
+
+        return response.Model.PublicPath;
+    }
 
 }
