@@ -26,12 +26,12 @@
 
                             <div class="w-full">
                                 <label for="small-input" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">Nombre</label>
-                                <input @bind="Name" type="text" id="small-input" class="block w-full appearance-none rounded-md border border-gray-200 bg-gray-50 p-2 text-gray-900 placeholder-gray-400 focus:border-current-500 focus:bg-white focus:outline-none focus:ring-current-500 dark:bg-zinc-900 dark:border-zinc-700 dark:text-gray-100 sm:text-xs focus:dark:bg-[#323232]">
+                                <input @bind="Name" type="text" id="small-input" class="block w-full appearance-none rounded-md border border-gray-200 bg-gray-50 p-2 text-gray-900 placeholder-gray-400 focus:border-current-500 focus:bg-white focus:outline-none focus:ring-current-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 sm:text-xs focus:dark:bg-[#323232]">
                             </div>
 
                             <div class="mt-3.5 w-full">
                                 <label for="small-input" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">Descripción</label>
-                                <input @bind="Direction" type="text" id="small-input" class="block w-full appearance-none rounded-md border border-gray-200 bg-gray-50 p-2 text-gray-900 placeholder-gray-400 focus:border-current-500 focus:bg-white focus:outline-none focus:ring-current-500 dark:bg-zinc-900 dark:border-zinc-700 dark:text-gray-100 sm:text-xs focus:dark:bg-[#323232]">
+                                <input @bind="Direction" type="text" id="small-input" class="block w-full appearance-none rounded-md border border-gray-200 bg-gray-50 p-2 text-gray-900 placeholder-gray-400 focus:border-current-500 focus:bg-white focus:outline-none focus:ring-current-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 sm:text-xs focus:dark:bg-[#323232]">
                             </div>
 
                         </div>
@@ -57,11 +57,11 @@
 
 
             @* Componentes. *@
-            <div class="flex-1 UIScroll mt-2 gap-3 overflow-auto">
+            <div class="UIScroll mt-2 flex-1 gap-3 overflow-auto">
 
                 @if (Participantes.Count <= 0)
                 {
-                    <div class="border-2 mt-3 flex w-full items-center justify-center rounded-lg border-dashed border-zinc-300 py-7 dark:border-gray-400">
+                    <div class="mt-3 flex w-full items-center justify-center rounded-lg border-2 border-dashed border-zinc-300 py-7 dark:border-gray-400">
                         <label class="text-zinc-400 dark:text-gray-200">No tienes ningún miembro adicional</label>
                     </div>
                 }
@@ -78,7 +78,7 @@
 
             @* Botón. *@
             <div class="mb-2 mt-2 flex w-full items-end justify-center self-end">
-                <button @onclick="Create" type="button" class="w-full rounded-lg bg-current-600 px-3 py-2 text-center text-sm font-medium text-white hover:bg-current-700 focus:ring-4 focus:outline-none focus:ring-current-300 dark:bg-current-600 dark:hover:bg-current-700 dark:focus:ring-current-800">
+                <button @onclick="Create" type="button" class="w-full rounded-lg bg-current-600 px-3 py-2 text-center text-sm font-medium text-white hover:bg-current-700 focus:outline-none focus:ring-4 focus:ring-current-300 dark:bg-current-600 dark:hover:bg-current-700 dark:focus:ring-current-800">
                     Crear Inventario
                 </button>
             </div>

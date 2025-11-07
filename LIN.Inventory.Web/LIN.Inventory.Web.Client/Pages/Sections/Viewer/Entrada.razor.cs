@@ -227,4 +227,20 @@ public partial class Entrada
         ToastService.ShowWarningAsync("Todavía no puedes usar esta función, pero no falta mucho 😉");
     }
 
+    async void Comfirm()
+    {
+        var response = await Access.Inventory.Controllers.Inflows.Comfirm(Model.Id, Session.Instance.Token);
+
+        if (response.Response != Responses.Success)
+        {
+            await ToastService.ShowErrorAsync("No se logro comfirmar el movimiento");
+            return;
+        }
+
+        await ToastService.ShowAsync("Movimiento comfirmado correctamente.");
+
+        Model.IsAccepted = true;
+
+        await InvokeAsync(StateHasChanged);
+    }
 }

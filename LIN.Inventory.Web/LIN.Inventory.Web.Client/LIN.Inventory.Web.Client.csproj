@@ -18,8 +18,4 @@
     <ProjectReference Include="..\..\..\..\Components\LIN.Inventory.Shared\LIN.Inventory.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
-  </ItemGroup>
-
 </Project>

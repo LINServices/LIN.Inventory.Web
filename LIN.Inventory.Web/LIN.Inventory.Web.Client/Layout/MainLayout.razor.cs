@@ -1,6 +1,5 @@
 ﻿namespace LIN.Inventory.Web.Client.Layout;
 
-
 public partial class MainLayout
 {
 

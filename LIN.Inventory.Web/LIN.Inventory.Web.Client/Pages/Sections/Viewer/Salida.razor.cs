@@ -212,4 +212,24 @@ public partial class Salida
             : "https://api.linplatform.com/bucket/PublicFiles/" + image + ".png";
     }
 
+
+    async void Reverse()
+    {
+        var newdate = Model?.Date;
+
+       var response = await Access.Inventory.Controllers.Outflows.Reverse(Model.Id, Session.Instance.Token);
+
+        if (response.Response != Responses.Success)
+        {
+            await ToastService.ShowErrorAsync("No se pudo revertir el movimiento, intenta nuevamente más tarde.");
+            return;
+        }
+
+        await ToastService.ShowAsync("Movimiento revertido correctamente.");
+
+        Model.Status = MovementStatus.Reversed;
+
+        await InvokeAsync(StateHasChanged);
+    }
+
 }

@@ -62,7 +62,7 @@
         <div class="mt-3">
             <div class="flex flex-col justify-center py-4">
 
-                <label class="mt-0.5 text-sm dark:text-gray-300">Total de pagos</label>
+                <label class="mt-0.5 text-sm dark:text-gray-300">Total de productos</label>
                 <label class="text-4xl font-bold dark:text-gray-100">@(Response?.Models.Count ?? 0)</label>
 
                 <div class="flex w-40 items-center rounded-lg bg-slate-200 p-1.5 dark:bg-zinc-900">
@@ -106,7 +106,7 @@
                         @* No hay elementos *@
                         @if (Response.Models.Count <= 0)
                         {
-                            <div class="border-2 mt-3 flex w-full items-center justify-center rounded-lg border-dashed border-zinc-300 py-7 dark:border-gray-400">
+                            <div class="mt-3 flex w-full items-center justify-center rounded-lg border-2 border-dashed border-zinc-300 py-7 dark:border-gray-400">
                                 <label class="text-zinc-400 dark:text-gray-200">No tienes ningún producto</label>
                             </div>
                         }
@@ -125,7 +125,7 @@
                 @* Sin autorización *@
                 case Responses.Unauthorized:
                     {
-                        <div class="border-2 mt-3 flex w-full items-center justify-center rounded-lg border-dashed border-zinc-300 py-7 dark:border-gray-400">
+                        <div class="mt-3 flex w-full items-center justify-center rounded-lg border-2 border-dashed border-zinc-300 py-7 dark:border-gray-400">
                             <label class="text-zinc-400 dark:text-gray-200">No tienes autorización</label>
                         </div>
                         break;
@@ -133,7 +133,7 @@
                 @* Otros *@
                 default:
                     {
-                        <div class="border-2 mt-3 flex w-full items-center justify-center rounded-lg border-dashed border-zinc-300 py-7 dark:border-gray-400">
+                        <div class="mt-3 flex w-full items-center justify-center rounded-lg border-2 border-dashed border-zinc-300 py-7 dark:border-gray-400">
                             <label class="text-zinc-400 dark:text-gray-200">Error al obtener los productos</label>
                         </div>
                         break;
